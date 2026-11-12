@@ -10,7 +10,7 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(value = FwMain.MODID, dist = Dist.CLIENT)
-@EventBusSubscriber(modid = FwMain.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = FwMain.MODID, value = Dist.CLIENT)
 public class FwClient {
 
     public FwClient(ModContainer container) {
