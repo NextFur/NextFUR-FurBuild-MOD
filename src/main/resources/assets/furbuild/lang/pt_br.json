@@ -1,0 +1,6 @@
+{
+  "itemGroup.furbuild": "NextFUR FurBuild",
+  "furbuild.configuration.title": "Configurações do FurBuild",
+  "furbuild.configuration.enableApiIntegration": "Ativar Integração com API NextFUR",
+  "furbuild.configuration.apiEndpoint": "URL do Endpoint da API"
+}
