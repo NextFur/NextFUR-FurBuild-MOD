@@ -2,5 +2,52 @@
   "itemGroup.furbuild": "NextFUR FurBuild",
   "furbuild.configuration.title": "Configurações do FurBuild",
   "furbuild.configuration.enableApiIntegration": "Ativar Integração com API NextFUR",
-  "furbuild.configuration.apiEndpoint": "URL do Endpoint da API"
+  "furbuild.configuration.apiEndpoint": "URL do Endpoint da API",
+
+  "item.furbuild.style_wand": "Varinha de Estilo (Style Wand)",
+  "item.furbuild.style_wand.desc1": "Criador de Estilos e Módulos In-Game (Seleção Cuboide)",
+  "item.furbuild.style_wand.desc2": "Clique Esq.: Ponto A | Clique Dir.: Ponto B",
+  "item.furbuild.style_wand.desc3": "Dica: Sempre construa seus módulos virados para o NORTE (NORTH)!",
+
+  "item.furbuild.generate_wand": "Varinha de Geração (Generate Wand)",
+  "item.furbuild.generate_wand.mode": "Modo de Seleção: %s",
+  "item.furbuild.generate_wand.desc1": "Shift + Scroll (ou /furwand mode) para alternar o formato",
+  "item.furbuild.generate_wand.desc2": "Clique Esq.: Ponto Inicial | Clique Dir.: Adicionar Ponto",
+
+  "message.furbuild.wand.mode_changed": "[FurBuild] Modo de seleção alterado para: %s",
+  "message.furbuild.wand.invalid_mode": "[FurBuild] Modo inválido '%s'. Use: cuboid, polygon, cylinder ou spline.",
+  "message.furbuild.wand.cleared": "[FurBuild] Seleção limpa.",
+
+  "message.furbuild.selection.pos_a": "[FurBuild] Ponto A definido em %s",
+  "message.furbuild.selection.pos_b": "[FurBuild] Ponto B definido em %s",
+  "message.furbuild.selection.point_start": "[FurBuild] Ponto 1 (%s) definido em %s",
+  "message.furbuild.selection.point_added": "[FurBuild] Ponto #%s (%s) adicionado em %s",
+  "message.furbuild.selection.cylinder_center": "[FurBuild] Centro do cilindro definido em %s",
+  "message.furbuild.selection.cylinder_radius": "[FurBuild] Cilindro raio: %s, altura: %s em %s",
+
+  "message.furbuild.style.created": "[FurBuild] Estilo '%s' inicializado com grade modular %sx%s.",
+  "message.furbuild.style.north_reminder": "[FurBuild] Lembrete: Sempre construa seus módulos 3D virados para o NORTE (NORTH) para que o gerador os rotacione corretamente!",
+  "message.furbuild.style.invalid_category": "[FurBuild] Categoria inválida '%s'. Categorias válidas: %s",
+  "message.furbuild.style.need_cuboid": "[FurBuild] Selecione o Ponto A e o Ponto B primeiro usando a Style Wand!",
+  "message.furbuild.style.module_saved": "[FurBuild] Módulo '%s' (%s) salvo no estilo '%s' [peso=%s].",
+  "message.furbuild.style.palette_empty": "[FurBuild] Nenhum bloco sólido encontrado na seleção atual!",
+  "message.furbuild.style.palette_saved": "[FurBuild] Paleta de blocos '%s' salva no estilo '%s': %s",
+  "message.furbuild.style.list_empty": "[FurBuild] Nenhum estilo salvo ainda. Use /furstyle create <nome> [grid_size].",
+  "message.furbuild.style.list": "[FurBuild] Estilos salvos: %s",
+  "message.furbuild.style.not_found": "[FurBuild] Estilo '%s' não encontrado.",
+  "message.furbuild.style.info": "[FurBuild] Estilo '%s' | Grade: %s | Altura: %s | Módulos: %s | Paletas: %s",
+  "message.furbuild.style.error": "[FurBuild] Erro ao salvar dados do estilo: %s",
+
+  "message.furbuild.grid.plots_saved": "[FurBuild] Grade urbana gerada com %s lotes! Execute %s para preencher todos os lotes automaticamente.",
+
+  "message.furbuild.generate.invalid_type": "[FurBuild] Tipo de gerador inválido '%s'. Tipos válidos: %s",
+  "message.furbuild.generate.no_selection": "[FurBuild] Não foi possível executar '%s': selecione uma área com a Generate Wand primeiro!",
+  "message.furbuild.generate.empty": "[FurBuild] O gerador produziu 0 blocos.",
+  "message.furbuild.generate.queued": "[FurBuild] %s blocos na fila para %s (~500 blocos/tick)...",
+  "message.furbuild.generate.completed": "[FurBuild] Concluída a colocação de %s blocos para %s! Use /undo para desfazer.",
+
+  "message.furbuild.undo.started": "[FurBuild] Desfazendo %s blocos de %s...",
+  "message.furbuild.undo.completed": "[FurBuild] Undo concluído (%s blocos restaurados para %s).",
+  "message.furbuild.undo.empty": "[FurBuild] Nada para desfazer!",
+  "message.furbuild.presets.installed": "[FurBuild] %s estilos predefinidos gerados (%s) com todos os 11 módulos 3D e 3 paletas!"
 }

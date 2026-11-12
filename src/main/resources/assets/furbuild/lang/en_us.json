@@ -2,5 +2,52 @@
   "itemGroup.furbuild": "NextFUR FurBuild",
   "furbuild.configuration.title": "FurBuild Configuration",
   "furbuild.configuration.enableApiIntegration": "Enable NextFUR API",
-  "furbuild.configuration.apiEndpoint": "API Endpoint URL"
+  "furbuild.configuration.apiEndpoint": "API Endpoint URL",
+
+  "item.furbuild.style_wand": "Style Wand",
+  "item.furbuild.style_wand.desc1": "In-Game Style & Asset Creator (Cuboid Selection)",
+  "item.furbuild.style_wand.desc2": "Left-Click: Set Point A | Right-Click: Set Point B",
+  "item.furbuild.style_wand.desc3": "Tip: Always build modules facing NORTH!",
+
+  "item.furbuild.generate_wand": "Generate Wand",
+  "item.furbuild.generate_wand.mode": "Selection Mode: %s",
+  "item.furbuild.generate_wand.desc1": "Shift + Scroll-Wheel (or /furwand mode) to cycle shape",
+  "item.furbuild.generate_wand.desc2": "Left-Click: Primary Point | Right-Click: Add/Secondary Point",
+
+  "message.furbuild.wand.mode_changed": "[FurBuild] Selection mode set to: %s",
+  "message.furbuild.wand.invalid_mode": "[FurBuild] Invalid selection mode '%s'. Use: cuboid, polygon, cylinder, or spline.",
+  "message.furbuild.wand.cleared": "[FurBuild] Selection cleared.",
+
+  "message.furbuild.selection.pos_a": "[FurBuild] Point A set to %s",
+  "message.furbuild.selection.pos_b": "[FurBuild] Point B set to %s",
+  "message.furbuild.selection.point_start": "[FurBuild] %s Point 1 set to %s",
+  "message.furbuild.selection.point_added": "[FurBuild] Added Point #%s (%s) at %s",
+  "message.furbuild.selection.cylinder_center": "[FurBuild] Cylinder center set to %s",
+  "message.furbuild.selection.cylinder_radius": "[FurBuild] Cylinder radius: %s, height: %s at %s",
+
+  "message.furbuild.style.created": "[FurBuild] Initialized style '%s' with modular grid size %sx%s.",
+  "message.furbuild.style.north_reminder": "[FurBuild] Reminder: Always build your 3D modules facing NORTH so the generator rotates them properly!",
+  "message.furbuild.style.invalid_category": "[FurBuild] Unknown category '%s'. Valid categories: %s",
+  "message.furbuild.style.need_cuboid": "[FurBuild] Please select Point A and Point B first using the Style Wand!",
+  "message.furbuild.style.module_saved": "[FurBuild] Saved module '%s' (%s) to style '%s' [weight=%s].",
+  "message.furbuild.style.palette_empty": "[FurBuild] No non-air blocks found in the current selection!",
+  "message.furbuild.style.palette_saved": "[FurBuild] Saved block palette '%s' to style '%s': %s",
+  "message.furbuild.style.list_empty": "[FurBuild] No styles saved yet. Use /furstyle create <name> [grid_size].",
+  "message.furbuild.style.list": "[FurBuild] Saved styles: %s",
+  "message.furbuild.style.not_found": "[FurBuild] Style '%s' not found.",
+  "message.furbuild.style.info": "[FurBuild] Style '%s' | Grid: %s | Height: %s | Modules: %s | Palettes: %s",
+  "message.furbuild.style.error": "[FurBuild] Error saving style data: %s",
+
+  "message.furbuild.grid.plots_saved": "[FurBuild] Generated city grid with %s plots! Run %s to automatically populate all plots.",
+
+  "message.furbuild.generate.invalid_type": "[FurBuild] Invalid generator type '%s'. Valid types: %s",
+  "message.furbuild.generate.no_selection": "[FurBuild] Cannot run '%s' generator: please select an area with the Generate Wand first!",
+  "message.furbuild.generate.empty": "[FurBuild] Generator produced 0 blocks to place.",
+  "message.furbuild.generate.queued": "[FurBuild] Queued %s blocks for %s (~500 blocks/tick)...",
+  "message.furbuild.generate.completed": "[FurBuild] Completed placing %s blocks for %s! Use /undo to revert.",
+
+  "message.furbuild.undo.started": "[FurBuild] Reverting %s blocks from %s...",
+  "message.furbuild.undo.completed": "[FurBuild] Undo completed (%s blocks restored for %s).",
+  "message.furbuild.undo.empty": "[FurBuild] Nothing left to undo!",
+  "message.furbuild.presets.installed": "[FurBuild] Generated %s preset styles (%s) with all 11 3D modules and 3 palettes!"
 }

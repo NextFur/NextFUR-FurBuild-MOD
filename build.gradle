@@ -132,10 +132,50 @@ var syncToBinMain = tasks.register('syncToBinMain', Sync) {
     into 'bin/main'
 }
 
+// Resolves Windows NTFS junctions/symlinks (e.g. Scoop's apps\gradle\current\.gradle -> persist\gradle\.gradle)
+// in generated ModDevGradle argument and classpath files so they match the canonicalized paths on the IDE classpath.
+var canonicalizeModDevPaths = tasks.register('canonicalizeModDevPaths') {
+    var moddevDir = layout.buildDirectory.dir('moddev')
+    var rawHome = gradle.gradleUserHomeDir.absolutePath
+    var realHome = gradle.gradleUserHomeDir.toPath().toRealPath().toString()
+    doLast {
+        if (rawHome != realHome) {
+            var rawEscaped = rawHome.replace('\\', '\\\\')
+            var realEscaped = realHome.replace('\\', '\\\\')
+            var dir = moddevDir.get().asFile
+            if (dir.exists()) {
+                dir.eachFileMatch(~/.*\.(txt|xml|properties)/) { file ->
+                    var content = file.getText('UTF-8')
+                    var updated = content
+                        .replace(rawEscaped, realEscaped)
+                        .replace(rawHome, realHome)
+                    if (updated != content) {
+                        file.setText(updated, 'UTF-8')
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.matching {
+    (it.name.startsWith('prepare') && it.name.endsWith('Run')) ||
+    (it.name.startsWith('write') && it.name.endsWith('LegacyClasspath'))
+}.configureEach {
+    finalizedBy canonicalizeModDevPaths
+}
+
+tasks.withType(JavaExec).configureEach {
+    doFirst {
+        classpath = files(classpath.files.collect { it.toPath().toRealPath().toFile() })
+    }
+}
+
 compileJava.finalizedBy syncToBinMain
 processResources.finalizedBy syncToBinMain
 classes.finalizedBy syncToBinMain
 neoForge.ideSyncTask syncToBinMain
+neoForge.ideSyncTask canonicalizeModDevPaths
 
 idea {
     module {
