@@ -1,40 +1,87 @@
-### Gradle ###
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/**/build/
+# ======================================
+# GERAL
+# ======================================
 
-### IntelliJ IDEA ###
-.idea/
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/**/out/
+old/*
+old/
 
-.run/
+**/*.log
+**/*.swp
+**/*.class
+**/*.DS_Store
+**/*.iml
+**/*BACKUP*
 
-### Eclipse ###
-.apt_generated
-.classpath
-.eclipse/
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/**/bin/
+# IDEs
+**/.idea/
+**/*.sublime*
+**/.vscode/
+**/.vscode-test/
 
-### VS Code ###
-.vscode/
+# ======================================
+# GRADLE
+# ======================================
+**/.gradle/
+**/build/
+**/out/
 
-### Mac OS ###
-.DS_Store
+# Caches
+**/.classpath
+**/.project
+**/.settings/
 
-### Minecraft Modding ###
-run/
-!**/src/**/run/
-**/src/generated/**/.cache/
-repo/
-!**/src/**/repo/
+# ======================================
+# NPM/Yarn
+# ======================================
+**/node_modules/
+**/yarn.lock
+**/package-lock.json
+**/.pnp.*
+**/.pnp
+
+# ======================================
+# Minecraft Específico
+# ======================================
+**/debug/
+**/runs/
+**/logs/
+**/crash-reports/
+**/config/
+**/saves/
+**/mods/
+**/dist/
+*.launch
+*.nb-gradle/
+*.vscode/
+**/run/
+**/run2/
+**/eclipse/
+
+# ======================================
+# IntelliJ / Eclipse / NetBeans
+# ======================================
+**/*.iws
+**/*.ipr
+**/*.idea/
+**/*.launch
+**/*.settings/
+**/*.metadata/
+**/bin/
+
+# ======================================
+# Testes temporários e artefatos
+# ======================================
+**/*.tmp
+**/*.bak
+**/*.orig
+**/*.rej
+**/*.patch
+
+# ======================================
+# Arquivos do sistema operacional
+# ======================================
+**/Thumbs.db
+**/ehthumbs.db
+**/Desktop.ini
+**/$RECYCLE.BIN/
+**/*.stackdump

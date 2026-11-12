@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.148'
     id 'idea'
+    id 'eclipse'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -124,6 +125,17 @@ publishing {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
+
+var syncToBinMain = tasks.register('syncToBinMain', Sync) {
+    dependsOn classes
+    from sourceSets.main.output
+    into 'bin/main'
+}
+
+compileJava.finalizedBy syncToBinMain
+processResources.finalizedBy syncToBinMain
+classes.finalizedBy syncToBinMain
+neoForge.ideSyncTask syncToBinMain
 
 idea {
     module {
