@@ -178,7 +178,7 @@ public class InteriorGeneratorEngine {
                 }
             }
 
-            // 4. Prop Population: Wall-hugging, Center, and Ceiling props
+            // 4. Prop Population: Wall-hugging, Center, Corner, and Ceiling props
             if (!flags.isExcluded(ModuleCategory.INTERIOR_PROP)) {
                 for (Room2D room : rooms) {
                     populateRoomProps(
@@ -191,6 +191,7 @@ public class InteriorGeneratorEngine {
                             stairZ,
                             style,
                             paintingOpt,
+                            flags,
                             random,
                             builder
                     );
@@ -275,6 +276,10 @@ public class InteriorGeneratorEngine {
         }
     }
 
+    private static boolean isNearStairwell(int x, int z, int stairMinX, int stairMaxX, int stairZ) {
+        return x >= stairMinX - 1 && x <= stairMaxX + 1 && Math.abs(z - stairZ) <= 2;
+    }
+
     private static void populateRoomProps(
             ServerLevel level,
             Room2D room,
@@ -285,6 +290,7 @@ public class InteriorGeneratorEngine {
             int stairZ,
             StyleDefinition style,
             Optional<BlockPalette> paintingOpt,
+            GenerationFlags flags,
             RandomSource random,
             BlockPlacementQueue.Builder builder
     ) {
@@ -295,42 +301,82 @@ public class InteriorGeneratorEngine {
         int cx = room.centerX();
         int cz = room.centerZ();
 
-        // Ceiling prop (hanging lantern chandelier at room center)
-        if (ceilingY > propY + 1) {
-            BlockState hangingLantern = Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, true);
-            builder.setBlock(new BlockPos(cx, ceilingY, cz), hangingLantern);
-        }
-
-        // If the style has custom interior_prop schematics, place one near the room center or corner
-        Optional<StyleModuleEntry> propEntry = style.pickWeightedModule(ModuleCategory.INTERIOR_PROP, random);
-        if (propEntry.isPresent()) {
-            BlockPos propOrigin = new BlockPos(room.minX + 1, propY, room.minZ + 1);
-            if (!(propOrigin.getX() >= stairMinX - 1 && propOrigin.getX() <= stairMaxX + 1 && Math.abs(propOrigin.getZ() - stairZ) <= 2)) {
-                Rotation rot = Rotation.values()[random.nextInt(Rotation.values().length)];
+        // 1. Ceiling prop: INTERIOR_CEILING module or hanging lantern chandelier
+        if (ceilingY > propY + 1 && !flags.isExcluded(ModuleCategory.INTERIOR_CEILING)) {
+            Optional<StyleModuleEntry> ceilingMod = style.pickWeightedModule(ModuleCategory.INTERIOR_CEILING, random);
+            if (ceilingMod.isPresent()) {
                 TemplatePlacementHelper.placeModuleIntoBuilder(
-                        level, style.styleName(), propEntry.get(),
-                        propOrigin, rot, Mirror.NONE, paintingOpt, random, builder
+                        level, style.styleName(), ceilingMod.get(),
+                        new BlockPos(cx, ceilingY, cz), Rotation.NONE, Mirror.NONE, paintingOpt, random, builder
                 );
-                return;
+            } else {
+                BlockState hangingLantern = Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, true);
+                builder.setBlock(new BlockPos(cx, ceilingY, cz), hangingLantern);
             }
         }
 
-        // Procedural fallback props:
-        // 1. Center prop: carpet or table in larger rooms
-        if (!(cx >= stairMinX - 1 && cx <= stairMaxX + 1 && Math.abs(cz - stairZ) <= 2)) {
-            builder.setBlock(new BlockPos(cx, propY, cz), Blocks.RED_CARPET.defaultBlockState());
+        // 2. Center prop: INTERIOR_CENTER (or fallback INTERIOR_PROP) or procedural table/carpet
+        if (!flags.isExcluded(ModuleCategory.INTERIOR_CENTER) && !isNearStairwell(cx, cz, stairMinX, stairMaxX, stairZ)) {
+            Optional<StyleModuleEntry> centerMod = style.pickWeightedModuleWithFallback(
+                    random, ModuleCategory.INTERIOR_CENTER, ModuleCategory.INTERIOR_PROP
+            );
+            if (centerMod.isPresent()) {
+                Rotation rot = Rotation.values()[random.nextInt(Rotation.values().length)];
+                TemplatePlacementHelper.placeModuleIntoBuilder(
+                        level, style.styleName(), centerMod.get(),
+                        new BlockPos(cx, propY, cz), rot, Mirror.NONE, paintingOpt, random, builder
+                );
+            } else {
+                builder.setBlock(new BlockPos(cx, propY, cz), Blocks.RED_CARPET.defaultBlockState());
+                if (room.width() >= 6 && room.length() >= 6) {
+                    builder.setBlock(new BlockPos(cx + 1, propY, cz), Blocks.RED_CARPET.defaultBlockState());
+                    builder.setBlock(new BlockPos(cx, propY, cz + 1), Blocks.RED_CARPET.defaultBlockState());
+                    builder.setBlock(new BlockPos(cx + 1, propY, cz + 1), Blocks.RED_CARPET.defaultBlockState());
+                }
+            }
         }
 
-        // 2. Wall-hugging props in corners (avoiding mid-wall doorways and stairwells)
-        BlockPos cornerPropPos = new BlockPos(room.maxX - 1, propY, room.maxZ - 1);
-        if (!(cornerPropPos.getX() >= stairMinX - 1 && cornerPropPos.getX() <= stairMaxX + 1 && Math.abs(cornerPropPos.getZ() - stairZ) <= 2)) {
-            BlockState propBlock = switch (random.nextInt(4)) {
-                case 0 -> Blocks.BOOKSHELF.defaultBlockState();
-                case 1 -> Blocks.CRAFTING_TABLE.defaultBlockState();
-                case 2 -> Blocks.BARREL.defaultBlockState();
-                default -> Blocks.CHEST.defaultBlockState();
-            };
-            builder.setBlock(cornerPropPos, propBlock);
+        // 3. Wall-hugging props: INTERIOR_WALL (or INTERIOR_PROP) rotated inward along walls
+        if (!flags.isExcluded(ModuleCategory.INTERIOR_WALL)) {
+            Optional<StyleModuleEntry> wallMod = style.pickWeightedModuleWithFallback(
+                    random, ModuleCategory.INTERIOR_WALL, ModuleCategory.INTERIOR_PROP
+            );
+            int wx = room.minX + 1;
+            int wz = room.minZ + 1;
+            if (!isNearStairwell(wx, wz, stairMinX, stairMaxX, stairZ)) {
+                if (wallMod.isPresent()) {
+                    TemplatePlacementHelper.placeModuleIntoBuilder(
+                            level, style.styleName(), wallMod.get(),
+                            new BlockPos(wx, propY, wz), Rotation.CLOCKWISE_180, Mirror.NONE, paintingOpt, random, builder
+                    );
+                } else {
+                    builder.setBlock(new BlockPos(wx, propY, wz), Blocks.BOOKSHELF.defaultBlockState());
+                    builder.setBlock(new BlockPos(wx, propY + 1, wz), Blocks.POTTED_FERN.defaultBlockState());
+                }
+            }
+        }
+
+        // 4. Corner props: INTERIOR_CORNER or procedural corner furniture
+        if (!flags.isExcluded(ModuleCategory.INTERIOR_CORNER)) {
+            BlockPos cornerPropPos = new BlockPos(room.maxX - 1, propY, room.maxZ - 1);
+            if (!isNearStairwell(cornerPropPos.getX(), cornerPropPos.getZ(), stairMinX, stairMaxX, stairZ)) {
+                Optional<StyleModuleEntry> cornerMod = style.pickWeightedModule(ModuleCategory.INTERIOR_CORNER, random);
+                if (cornerMod.isPresent()) {
+                    TemplatePlacementHelper.placeModuleIntoBuilder(
+                            level, style.styleName(), cornerMod.get(),
+                            cornerPropPos, Rotation.NONE, Mirror.NONE, paintingOpt, random, builder
+                    );
+                } else {
+                    BlockState propBlock = switch (random.nextInt(5)) {
+                        case 0 -> Blocks.BOOKSHELF.defaultBlockState();
+                        case 1 -> Blocks.CRAFTING_TABLE.defaultBlockState();
+                        case 2 -> Blocks.BARREL.defaultBlockState();
+                        case 3 -> Blocks.POTTED_OAK_SAPLING.defaultBlockState();
+                        default -> Blocks.CHEST.defaultBlockState();
+                    };
+                    builder.setBlock(cornerPropPos, propBlock);
+                }
+            }
         }
     }
 }

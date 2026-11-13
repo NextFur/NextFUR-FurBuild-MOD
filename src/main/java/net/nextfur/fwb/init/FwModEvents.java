@@ -14,6 +14,7 @@ import net.nextfur.fwb.client.SelectionRenderer;
 import net.nextfur.fwb.client.WandClientInputHandler;
 import net.nextfur.fwb.generator.BlockPlacementQueue;
 import net.nextfur.fwb.items.GenerateWandItem;
+import net.nextfur.fwb.items.SelectWandItem;
 import net.nextfur.fwb.items.StyleWandItem;
 import net.nextfur.fwb.util.SelectionService;
 
@@ -24,6 +25,7 @@ public class FwModEvents {
 
         eventBus.addListener(FwModEvents::onLeftClickBlock);
         eventBus.addListener(FwModEvents::onRightClickBlock);
+        eventBus.addListener(FwModEvents::onRightClickItem);
         eventBus.addListener(FwModEvents::onPlayerLogin);
         eventBus.addListener(FwModEvents::onPlayerRespawn);
         eventBus.addListener(FwModEvents::onPlayerChangeDimension);
@@ -40,6 +42,13 @@ public class FwModEvents {
             if (!event.getLevel().isClientSide() && event.getEntity() instanceof ServerPlayer serverPlayer) {
                 if (event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.START) {
                     SelectionService.handleStyleWandLeftClick(serverPlayer, event.getPos());
+                }
+            }
+            event.setCanceled(true);
+        } else if (stack.getItem() instanceof SelectWandItem) {
+            if (!event.getLevel().isClientSide() && event.getEntity() instanceof ServerPlayer serverPlayer) {
+                if (event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.START) {
+                    SelectionService.handleSelectWandLeftClick(serverPlayer, stack, event.getPos());
                 }
             }
             event.setCanceled(true);
@@ -61,9 +70,30 @@ public class FwModEvents {
             }
             event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
             event.setCanceled(true);
+        } else if (stack.getItem() instanceof SelectWandItem) {
+            if (!event.getLevel().isClientSide() && event.getEntity() instanceof ServerPlayer serverPlayer) {
+                if (serverPlayer.isShiftKeyDown()) {
+                    SelectionService.handleSelectWandQuickMap(serverPlayer, stack);
+                } else {
+                    SelectionService.handleSelectWandRightClick(serverPlayer, stack, event.getPos());
+                }
+            }
+            event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
+            event.setCanceled(true);
         } else if (stack.getItem() instanceof GenerateWandItem) {
             if (!event.getLevel().isClientSide() && event.getEntity() instanceof ServerPlayer serverPlayer) {
                 SelectionService.handleGenerateWandRightClick(serverPlayer, stack, event.getPos());
+            }
+            event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
+            event.setCanceled(true);
+        }
+    }
+
+    private static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        ItemStack stack = event.getItemStack();
+        if (stack.getItem() instanceof SelectWandItem && event.getEntity().isShiftKeyDown()) {
+            if (!event.getLevel().isClientSide() && event.getEntity() instanceof ServerPlayer serverPlayer) {
+                SelectionService.handleSelectWandQuickMap(serverPlayer, stack);
             }
             event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
             event.setCanceled(true);

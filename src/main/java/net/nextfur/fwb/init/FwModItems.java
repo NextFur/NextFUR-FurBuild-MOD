@@ -5,6 +5,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.nextfur.fwb.FwMain;
 import net.nextfur.fwb.items.GenerateWandItem;
+import net.nextfur.fwb.items.SelectWandItem;
 import net.nextfur.fwb.items.StyleWandItem;
 
 public class FwModItems {
@@ -18,5 +19,10 @@ public class FwModItems {
     public static final DeferredItem<GenerateWandItem> GENERATE_WAND = ITEMS.register(
             "generate_wand",
             () -> new GenerateWandItem(new Item.Properties())
+    );
+
+    public static final DeferredItem<SelectWandItem> SELECT_WAND = ITEMS.register(
+            "select_wand",
+            () -> new SelectWandItem(new Item.Properties())
     );
 }

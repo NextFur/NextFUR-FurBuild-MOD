@@ -18,6 +18,7 @@ import net.nextfur.fwb.data.PlayerSelectionData;
 import net.nextfur.fwb.data.SelectionMode;
 import net.nextfur.fwb.init.FwDataComponents;
 import net.nextfur.fwb.items.GenerateWandItem;
+import net.nextfur.fwb.items.SelectWandItem;
 import net.nextfur.fwb.items.StyleWandItem;
 import net.nextfur.fwb.util.SplineMath;
 import org.joml.Matrix4f;
@@ -41,15 +42,16 @@ public class SelectionRenderer {
         ItemStack offHand = player.getOffhandItem();
 
         boolean holdingStyleWand = mainHand.getItem() instanceof StyleWandItem || offHand.getItem() instanceof StyleWandItem;
+        boolean holdingSelectWand = mainHand.getItem() instanceof SelectWandItem || offHand.getItem() instanceof SelectWandItem;
         boolean holdingGenerateWand = mainHand.getItem() instanceof GenerateWandItem || offHand.getItem() instanceof GenerateWandItem;
 
-        if (!holdingStyleWand && !holdingGenerateWand) {
+        if (!holdingStyleWand && !holdingSelectWand && !holdingGenerateWand) {
             return;
         }
 
         PlayerSelectionData selection = ClientSelectionHolder.get();
         SelectionMode activeMode = selection.mode();
-        if (holdingStyleWand && !holdingGenerateWand) {
+        if ((holdingStyleWand || holdingSelectWand) && !holdingGenerateWand) {
             activeMode = SelectionMode.CUBOID;
         } else if (mainHand.getItem() instanceof GenerateWandItem) {
             activeMode = mainHand.getOrDefault(FwDataComponents.WAND_MODE, activeMode);
@@ -72,6 +74,11 @@ public class SelectionRenderer {
             case SPLINE -> renderSpline(poseStack, consumer, selection);
         }
 
+        // Render Select Wand object selection & mapped objects when holding Style Wand or Select Wand
+        if (holdingStyleWand || holdingSelectWand) {
+            renderSelectWandMapping(poseStack, consumer, selection);
+        }
+
         // Render saved city plots if present
         if (!selection.savedCityPlots().isEmpty()) {
             for (CityPlot plot : selection.savedCityPlots()) {
@@ -85,6 +92,32 @@ public class SelectionRenderer {
 
         poseStack.popPose();
         bufferSource.endBatch(RenderType.lines());
+    }
+
+    private static void renderSelectWandMapping(PoseStack poseStack, VertexConsumer consumer, PlayerSelectionData selection) {
+        if (selection.selectPosA().isPresent()) {
+            BlockPos a = selection.selectPosA().get();
+            LevelRenderer.renderLineBox(poseStack, consumer, new AABB(a).inflate(0.008), 0.1f, 0.95f, 1.0f, 0.95f);
+        }
+        if (selection.selectPosB().isPresent()) {
+            BlockPos b = selection.selectPosB().get();
+            LevelRenderer.renderLineBox(poseStack, consumer, new AABB(b).inflate(0.008), 1.0f, 0.2f, 0.95f, 0.95f);
+        }
+        if (selection.selectPosA().isPresent() && selection.selectPosB().isPresent()) {
+            BoundingBox bb = BoundingBox.fromCorners(selection.selectPosA().get(), selection.selectPosB().get());
+            AABB objBox = new AABB(
+                    bb.minX(), bb.minY(), bb.minZ(),
+                    bb.maxX() + 1.0, bb.maxY() + 1.0, bb.maxZ() + 1.0
+            ).inflate(0.006);
+            LevelRenderer.renderLineBox(poseStack, consumer, objBox, 0.95f, 0.25f, 0.95f, 0.95f);
+        }
+        for (CityPlot mapped : selection.mappedObjects()) {
+            AABB mappedBox = new AABB(
+                    mapped.minX(), mapped.minY(), mapped.minZ(),
+                    mapped.maxX() + 1.0, mapped.maxY() + 1.0, mapped.maxZ() + 1.0
+            ).inflate(0.004);
+            LevelRenderer.renderLineBox(poseStack, consumer, mappedBox, 0.15f, 0.95f, 0.35f, 0.85f);
+        }
     }
 
     private static void renderCuboid(PoseStack poseStack, VertexConsumer consumer, PlayerSelectionData selection) {

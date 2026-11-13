@@ -22,6 +22,7 @@ import net.nextfur.fwb.style.StyleModuleEntry;
 import net.nextfur.fwb.util.SelectionService;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 public class FurStyleCommand {
@@ -34,6 +35,12 @@ public class FurStyleCommand {
 
     public static final SuggestionProvider<CommandSourceStack> PALETTE_TYPE_SUGGESTIONS = (context, builder) ->
             SharedSuggestionProvider.suggest(List.of("path_blocks", "painting", "floor"), builder);
+
+    public static final SuggestionProvider<CommandSourceStack> PLACE_TYPE_SUGGESTIONS = (context, builder) ->
+            SharedSuggestionProvider.suggest(List.of("building", "interior", "road", "dungeon"), builder);
+
+    public static final SuggestionProvider<CommandSourceStack> CONFIG_KEY_SUGGESTIONS = (context, builder) ->
+            SharedSuggestionProvider.suggest(List.of("window_frequency", "small_road_distance", "big_road_distance"), builder);
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("furstyle")
@@ -92,18 +99,92 @@ public class FurStyleCommand {
                                 )
                         )
                 )
-                // 4. /furstyle list
+                // 4. /furstyle feed <style_name> [place_type]
+                .then(Commands.literal("feed")
+                        .then(Commands.argument("style_name", StringArgumentType.word())
+                                .suggests(STYLE_SUGGESTIONS)
+                                .executes(ctx -> executeFeedPlace(
+                                        ctx,
+                                        StringArgumentType.getString(ctx, "style_name"),
+                                        "building"
+                                ))
+                                .then(Commands.argument("place_type", StringArgumentType.word())
+                                        .suggests(PLACE_TYPE_SUGGESTIONS)
+                                        .executes(ctx -> executeFeedPlace(
+                                                ctx,
+                                                StringArgumentType.getString(ctx, "style_name"),
+                                                StringArgumentType.getString(ctx, "place_type")
+                                        ))
+                                )
+                        )
+                )
+                // 5. /furstyle map <style_name> [category] [module_name] [weight]
+                .then(Commands.literal("map")
+                        .then(Commands.argument("style_name", StringArgumentType.word())
+                                .suggests(STYLE_SUGGESTIONS)
+                                .executes(ctx -> executeMapObject(
+                                        ctx,
+                                        StringArgumentType.getString(ctx, "style_name"),
+                                        null, null, 1.0
+                                ))
+                                .then(Commands.argument("category", StringArgumentType.word())
+                                        .suggests(CATEGORY_SUGGESTIONS)
+                                        .executes(ctx -> executeMapObject(
+                                                ctx,
+                                                StringArgumentType.getString(ctx, "style_name"),
+                                                StringArgumentType.getString(ctx, "category"),
+                                                null, 1.0
+                                        ))
+                                        .then(Commands.argument("module_name", StringArgumentType.word())
+                                                .executes(ctx -> executeMapObject(
+                                                        ctx,
+                                                        StringArgumentType.getString(ctx, "style_name"),
+                                                        StringArgumentType.getString(ctx, "category"),
+                                                        StringArgumentType.getString(ctx, "module_name"),
+                                                        1.0
+                                                ))
+                                                .then(Commands.argument("weight", DoubleArgumentType.doubleArg(0.01, 1000.0))
+                                                        .executes(ctx -> executeMapObject(
+                                                                ctx,
+                                                                StringArgumentType.getString(ctx, "style_name"),
+                                                                StringArgumentType.getString(ctx, "category"),
+                                                                StringArgumentType.getString(ctx, "module_name"),
+                                                                DoubleArgumentType.getDouble(ctx, "weight")
+                                                        ))
+                                                )
+                                        )
+                                )
+                        )
+                )
+                // 6. /furstyle config <style_name> <key> <value>
+                .then(Commands.literal("config")
+                        .then(Commands.argument("style_name", StringArgumentType.word())
+                                .suggests(STYLE_SUGGESTIONS)
+                                .then(Commands.argument("key", StringArgumentType.word())
+                                        .suggests(CONFIG_KEY_SUGGESTIONS)
+                                        .then(Commands.argument("value", IntegerArgumentType.integer(0, 64))
+                                                .executes(ctx -> executeConfig(
+                                                        ctx,
+                                                        StringArgumentType.getString(ctx, "style_name"),
+                                                        StringArgumentType.getString(ctx, "key"),
+                                                        IntegerArgumentType.getInteger(ctx, "value")
+                                                ))
+                                        )
+                                )
+                        )
+                )
+                // 7. /furstyle list
                 .then(Commands.literal("list")
                         .executes(FurStyleCommand::executeList)
                 )
-                // 5. /furstyle info <style_name>
+                // 8. /furstyle info <style_name>
                 .then(Commands.literal("info")
                         .then(Commands.argument("style_name", StringArgumentType.word())
                                 .suggests(STYLE_SUGGESTIONS)
                                 .executes(ctx -> executeInfo(ctx, StringArgumentType.getString(ctx, "style_name")))
                         )
                 )
-                // 6. /furstyle presets
+                // 9. /furstyle presets
                 .then(Commands.literal("presets")
                         .executes(ctx -> FurBuildHelpCommand.executeInstallPresets(ctx, true))
                 )
@@ -233,6 +314,141 @@ public class FurStyleCommand {
         }
     }
 
+    public static int executeFeedPlace(
+            CommandContext<CommandSourceStack> ctx,
+            String styleName,
+            String placeType
+    ) {
+        ServerPlayer player = ctx.getSource().getPlayer();
+        if (player == null) {
+            ctx.getSource().sendFailure(Component.literal("Only players can feed a place selection."));
+            return 0;
+        }
+        PlayerSelectionData selection = SelectionService.getSelection(player);
+        if (!selection.hasCuboidSelection()) {
+            ctx.getSource().sendFailure(Component.translatable("message.furbuild.style.need_cuboid"));
+            return 0;
+        }
+        BoundingBox placeBox = BoundingBox.fromCorners(selection.posA().get(), selection.posB().get());
+        try {
+            List<String> palettes = StyleManager.feedPlaceIntoStyle(player.serverLevel(), styleName, placeType, placeBox);
+            String safeStyle = StyleManager.sanitizeName(styleName);
+            SelectionService.setSelection(player, selection.withMappingSession(safeStyle, placeType));
+            String paletteSummary = palettes.isEmpty() ? "none" : String.join(", ", palettes);
+            ctx.getSource().sendSuccess(() -> Component.translatable(
+                    "message.furbuild.map.started",
+                    Component.literal(safeStyle).withStyle(ChatFormatting.AQUA),
+                    Component.literal(placeType).withStyle(ChatFormatting.GOLD),
+                    Component.literal(paletteSummary).withStyle(ChatFormatting.WHITE)
+            ).withStyle(ChatFormatting.GREEN), true);
+            return 1;
+        } catch (Exception e) {
+            ctx.getSource().sendFailure(Component.translatable("message.furbuild.style.error", e.getMessage()));
+            return 0;
+        }
+    }
+
+    public static int executeMapObject(
+            CommandContext<CommandSourceStack> ctx,
+            String styleName,
+            String categoryStr,
+            String moduleName,
+            double weight
+    ) {
+        ServerPlayer player = ctx.getSource().getPlayer();
+        if (player == null) {
+            ctx.getSource().sendFailure(Component.literal("Only players can map selected objects."));
+            return 0;
+        }
+        PlayerSelectionData selection = SelectionService.getSelection(player);
+        Optional<BoundingBox> objBoxOpt = selection.getSelectObjectBoundingBox();
+        if (objBoxOpt.isEmpty()) {
+            ctx.getSource().sendFailure(Component.translatable("message.furbuild.map.need_select"));
+            return 0;
+        }
+
+        ModuleCategory category = categoryStr != null
+                ? ModuleCategory.byName(categoryStr)
+                : selection.activeSelectCategory();
+        if (category == null) {
+            ctx.getSource().sendFailure(Component.translatable(
+                    "message.furbuild.style.invalid_category",
+                    categoryStr,
+                    String.join(", ", ModuleCategory.allNames())
+            ));
+            return 0;
+        }
+
+        String safeStyle = StyleManager.sanitizeName(styleName);
+        String resolvedName = (moduleName == null || moduleName.isBlank())
+                ? category.getSerializedName() + "_" + (selection.mappedObjects().size() + 1)
+                : moduleName;
+
+        try {
+            StyleModuleEntry entry = StyleManager.saveMappedModule(
+                    player.serverLevel(),
+                    safeStyle,
+                    category,
+                    resolvedName,
+                    weight,
+                    objBoxOpt.get(),
+                    selection.getBoundingBox()
+            );
+            SelectionService.setSelection(player, selection
+                    .withActiveSelectCategory(category)
+                    .withAddedMappedObject(objBoxOpt.get()));
+
+            ctx.getSource().sendSuccess(() -> Component.translatable(
+                    "message.furbuild.map.saved",
+                    Component.literal(entry.name()).withStyle(ChatFormatting.AQUA),
+                    Component.literal(category.getSerializedName()).withStyle(ChatFormatting.GOLD),
+                    Component.literal(safeStyle).withStyle(ChatFormatting.GREEN)
+            ).withStyle(ChatFormatting.GREEN), true);
+            return 1;
+        } catch (Exception e) {
+            ctx.getSource().sendFailure(Component.translatable("message.furbuild.style.error", e.getMessage()));
+            return 0;
+        }
+    }
+
+    private static int executeConfig(
+            CommandContext<CommandSourceStack> ctx,
+            String styleName,
+            String key,
+            int value
+    ) {
+        Optional<StyleDefinition> opt = StyleManager.loadStyle(ctx.getSource().getServer(), styleName);
+        if (opt.isEmpty()) {
+            ctx.getSource().sendFailure(Component.translatable("message.furbuild.style.not_found", styleName));
+            return 0;
+        }
+        StyleDefinition style = opt.get();
+        String lowerKey = key.toLowerCase(Locale.ROOT);
+        StyleDefinition updated;
+        switch (lowerKey) {
+            case "window_frequency", "winfreq" -> updated = style.withWindowFrequency(value);
+            case "small_road_distance", "small_distance" -> updated = style.withRoadDistances(value, style.bigRoadDistance());
+            case "big_road_distance", "big_distance" -> updated = style.withRoadDistances(style.smallRoadDistance(), value);
+            default -> {
+                ctx.getSource().sendFailure(Component.literal("Unknown config key: " + key));
+                return 0;
+            }
+        }
+        try {
+            StyleManager.saveStyleDefinition(ctx.getSource().getServer(), updated);
+            ctx.getSource().sendSuccess(() -> Component.translatable(
+                    "message.furbuild.style.configured",
+                    Component.literal(updated.styleName()).withStyle(ChatFormatting.AQUA),
+                    Component.literal(lowerKey).withStyle(ChatFormatting.GOLD),
+                    value
+            ).withStyle(ChatFormatting.GREEN), true);
+            return 1;
+        } catch (Exception e) {
+            ctx.getSource().sendFailure(Component.translatable("message.furbuild.style.error", e.getMessage()));
+            return 0;
+        }
+    }
+
     private static int executeList(CommandContext<CommandSourceStack> ctx) {
         List<String> styles = StyleManager.listStyles(ctx.getSource().getServer());
         if (styles.isEmpty()) {
@@ -262,6 +478,10 @@ public class FurStyleCommand {
                 style.modules().size(),
                 style.palettes().size()
         ).withStyle(ChatFormatting.GOLD), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+                String.format(Locale.ROOT, "  WindowFreq: %d | SmallRoadDist: %d | BigRoadDist: %d",
+                        style.windowFrequency(), style.smallRoadDistance(), style.bigRoadDistance())
+        ).withStyle(ChatFormatting.GRAY), false);
         return 1;
     }
 }

@@ -5,9 +5,15 @@
   "furbuild.configuration.apiEndpoint": "API Endpoint URL",
 
   "item.furbuild.style_wand": "Style Wand",
-  "item.furbuild.style_wand.desc1": "In-Game Style & Asset Creator (Cuboid Selection)",
+  "item.furbuild.style_wand.desc1": "In-Game Style & Place Feeder (Cuboid Selection)",
   "item.furbuild.style_wand.desc2": "Left-Click: Set Point A | Right-Click: Set Point B",
-  "item.furbuild.style_wand.desc3": "Tip: Always build modules facing NORTH!",
+  "item.furbuild.style_wand.desc3": "Tip: Use /furstyle feed <style> [place] to map an existing build!",
+
+  "item.furbuild.select_wand": "Select Wand",
+  "item.furbuild.select_wand.category": "Object Category: %s",
+  "item.furbuild.select_wand.desc1": "Shift + Scroll-Wheel (or /furmap type) to cycle object type",
+  "item.furbuild.select_wand.desc2": "Left-Click: Object Point A | Right-Click: Object Point B",
+  "item.furbuild.select_wand.desc3": "Shift + Right-Click (or /furmap save) to save mapped object!",
 
   "item.furbuild.generate_wand": "Generate Wand",
   "item.furbuild.generate_wand.mode": "Selection Mode: %s",
@@ -17,6 +23,16 @@
   "message.furbuild.wand.mode_changed": "[FurBuild] Selection mode set to: %s",
   "message.furbuild.wand.invalid_mode": "[FurBuild] Invalid selection mode '%s'. Use: cuboid, polygon, cylinder, or spline.",
   "message.furbuild.wand.cleared": "[FurBuild] Selection cleared.",
+
+  "message.furbuild.select_wand.category_changed": "[FurBuild] Select Wand object category set to: %s",
+  "message.furbuild.select_wand.pos_a": "[FurBuild] Select Point A set to %s [%s]",
+  "message.furbuild.select_wand.pos_b": "[FurBuild] Select Point B set to %s [%s]",
+
+  "message.furbuild.map.started": "[FurBuild] Fed '%s' (%s) into mapping mode! Extracted palettes: %s. Now select objects with the Select Wand and Shift+Right-Click to map them.",
+  "message.furbuild.map.no_session": "[FurBuild] No active mapping session! First select a built place with Style Wand and run /furstyle feed <style> [place].",
+  "message.furbuild.map.need_select": "[FurBuild] Please select Object Point A and Point B first using the Select Wand!",
+  "message.furbuild.map.saved": "[FurBuild] Mapped '%s' (%s) into style '%s'!",
+  "message.furbuild.map.cleared": "[FurBuild] Cleared Select Wand object mapping session.",
 
   "message.furbuild.selection.pos_a": "[FurBuild] Point A set to %s",
   "message.furbuild.selection.pos_b": "[FurBuild] Point B set to %s",
@@ -32,6 +48,7 @@
   "message.furbuild.style.module_saved": "[FurBuild] Saved module '%s' (%s) to style '%s' [weight=%s].",
   "message.furbuild.style.palette_empty": "[FurBuild] No non-air blocks found in the current selection!",
   "message.furbuild.style.palette_saved": "[FurBuild] Saved block palette '%s' to style '%s': %s",
+  "message.furbuild.style.configured": "[FurBuild] Updated style '%s' setting %s = %s.",
   "message.furbuild.style.list_empty": "[FurBuild] No styles saved yet. Use /furstyle create <name> [grid_size].",
   "message.furbuild.style.list": "[FurBuild] Saved styles: %s",
   "message.furbuild.style.not_found": "[FurBuild] Style '%s' not found.",
@@ -44,10 +61,15 @@
   "message.furbuild.generate.no_selection": "[FurBuild] Cannot run '%s' generator: please select an area with the Generate Wand first!",
   "message.furbuild.generate.empty": "[FurBuild] Generator produced 0 blocks to place.",
   "message.furbuild.generate.queued": "[FurBuild] Queued %s blocks for %s (~500 blocks/tick)...",
-  "message.furbuild.generate.completed": "[FurBuild] Completed placing %s blocks for %s! Use /undo to revert.",
+  "message.furbuild.generate.completed": "[FurBuild] Completed placing %s blocks for %s! Use /ud to undo or /rd to redo.",
 
   "message.furbuild.undo.started": "[FurBuild] Reverting %s blocks from %s...",
-  "message.furbuild.undo.completed": "[FurBuild] Undo completed (%s blocks restored for %s).",
+  "message.furbuild.undo.completed": "[FurBuild] Undo completed (%s blocks restored for %s). Use /rd to redo.",
   "message.furbuild.undo.empty": "[FurBuild] Nothing left to undo!",
-  "message.furbuild.presets.installed": "[FurBuild] Generated %s preset styles (%s) with all 11 3D modules and 3 palettes!"
+
+  "message.furbuild.redo.started": "[FurBuild] Redoing %s blocks for %s...",
+  "message.furbuild.redo.completed": "[FurBuild] Redo completed (%s blocks restored for %s).",
+  "message.furbuild.redo.empty": "[FurBuild] Nothing left to redo!",
+
+  "message.furbuild.presets.installed": "[FurBuild] Generated %s preset styles (%s) with all 3D modules and 3 palettes!"
 }

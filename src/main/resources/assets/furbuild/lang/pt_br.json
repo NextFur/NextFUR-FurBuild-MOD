@@ -5,9 +5,15 @@
   "furbuild.configuration.apiEndpoint": "URL do Endpoint da API",
 
   "item.furbuild.style_wand": "Varinha de Estilo (Style Wand)",
-  "item.furbuild.style_wand.desc1": "Criador de Estilos e Módulos In-Game (Seleção Cuboide)",
+  "item.furbuild.style_wand.desc1": "Criador de Estilos e Alimentador de Construções (Seleção Cuboide)",
   "item.furbuild.style_wand.desc2": "Clique Esq.: Ponto A | Clique Dir.: Ponto B",
-  "item.furbuild.style_wand.desc3": "Dica: Sempre construa seus módulos virados para o NORTE (NORTH)!",
+  "item.furbuild.style_wand.desc3": "Dica: Use /furstyle feed <estilo> [local] para mapear uma construção existente!",
+
+  "item.furbuild.select_wand": "Varinha de Seleção (Select Wand)",
+  "item.furbuild.select_wand.category": "Categoria do Objeto: %s",
+  "item.furbuild.select_wand.desc1": "Shift + Scroll (ou /furmap type) para alternar o tipo do objeto",
+  "item.furbuild.select_wand.desc2": "Clique Esq.: Ponto A do Objeto | Clique Dir.: Ponto B do Objeto",
+  "item.furbuild.select_wand.desc3": "Shift + Clique Dir. (ou /furmap save) para salvar o objeto mapeado!",
 
   "item.furbuild.generate_wand": "Varinha de Geração (Generate Wand)",
   "item.furbuild.generate_wand.mode": "Modo de Seleção: %s",
@@ -17,6 +23,16 @@
   "message.furbuild.wand.mode_changed": "[FurBuild] Modo de seleção alterado para: %s",
   "message.furbuild.wand.invalid_mode": "[FurBuild] Modo inválido '%s'. Use: cuboid, polygon, cylinder ou spline.",
   "message.furbuild.wand.cleared": "[FurBuild] Seleção limpa.",
+
+  "message.furbuild.select_wand.category_changed": "[FurBuild] Categoria da Select Wand alterada para: %s",
+  "message.furbuild.select_wand.pos_a": "[FurBuild] Ponto A do objeto definido em %s [%s]",
+  "message.furbuild.select_wand.pos_b": "[FurBuild] Ponto B do objeto definido em %s [%s]",
+
+  "message.furbuild.map.started": "[FurBuild] '%s' (%s) alimentado no modo de mapeamento! Paletas extraídas: %s. Agora selecione objetos com a Select Wand e use Shift+Clique Dir. para mapear.",
+  "message.furbuild.map.no_session": "[FurBuild] Nenhuma sessão de mapeamento ativa! Primeiro selecione um local construído com a Style Wand e execute /furstyle feed <estilo> [local].",
+  "message.furbuild.map.need_select": "[FurBuild] Selecione o Ponto A e o Ponto B do objeto primeiro usando a Select Wand!",
+  "message.furbuild.map.saved": "[FurBuild] Objeto '%s' (%s) mapeado no estilo '%s'!",
+  "message.furbuild.map.cleared": "[FurBuild] Sessão de mapeamento da Select Wand limpa.",
 
   "message.furbuild.selection.pos_a": "[FurBuild] Ponto A definido em %s",
   "message.furbuild.selection.pos_b": "[FurBuild] Ponto B definido em %s",
@@ -32,6 +48,7 @@
   "message.furbuild.style.module_saved": "[FurBuild] Módulo '%s' (%s) salvo no estilo '%s' [peso=%s].",
   "message.furbuild.style.palette_empty": "[FurBuild] Nenhum bloco sólido encontrado na seleção atual!",
   "message.furbuild.style.palette_saved": "[FurBuild] Paleta de blocos '%s' salva no estilo '%s': %s",
+  "message.furbuild.style.configured": "[FurBuild] Configuração do estilo '%s' atualizada: %s = %s.",
   "message.furbuild.style.list_empty": "[FurBuild] Nenhum estilo salvo ainda. Use /furstyle create <nome> [grid_size].",
   "message.furbuild.style.list": "[FurBuild] Estilos salvos: %s",
   "message.furbuild.style.not_found": "[FurBuild] Estilo '%s' não encontrado.",
@@ -44,10 +61,15 @@
   "message.furbuild.generate.no_selection": "[FurBuild] Não foi possível executar '%s': selecione uma área com a Generate Wand primeiro!",
   "message.furbuild.generate.empty": "[FurBuild] O gerador produziu 0 blocos.",
   "message.furbuild.generate.queued": "[FurBuild] %s blocos na fila para %s (~500 blocos/tick)...",
-  "message.furbuild.generate.completed": "[FurBuild] Concluída a colocação de %s blocos para %s! Use /undo para desfazer.",
+  "message.furbuild.generate.completed": "[FurBuild] Concluída a colocação de %s blocos para %s! Use /ud para desfazer ou /rd para refazer.",
 
   "message.furbuild.undo.started": "[FurBuild] Desfazendo %s blocos de %s...",
-  "message.furbuild.undo.completed": "[FurBuild] Undo concluído (%s blocos restaurados para %s).",
+  "message.furbuild.undo.completed": "[FurBuild] Undo concluído (%s blocos restaurados para %s). Use /rd para refazer.",
   "message.furbuild.undo.empty": "[FurBuild] Nada para desfazer!",
-  "message.furbuild.presets.installed": "[FurBuild] %s estilos predefinidos gerados (%s) com todos os 11 módulos 3D e 3 paletas!"
+
+  "message.furbuild.redo.started": "[FurBuild] Refazendo %s blocos de %s...",
+  "message.furbuild.redo.completed": "[FurBuild] Redo concluído (%s blocos restaurados para %s).",
+  "message.furbuild.redo.empty": "[FurBuild] Nada para refazer!",
+
+  "message.furbuild.presets.installed": "[FurBuild] %s estilos predefinidos gerados (%s) com todos os módulos 3D e 3 paletas!"
 }

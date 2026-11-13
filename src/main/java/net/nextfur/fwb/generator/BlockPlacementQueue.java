@@ -51,6 +51,12 @@ public class BlockPlacementQueue {
     ) {
     }
 
+    public enum JobType {
+        GENERATE,
+        UNDO,
+        REDO
+    }
+
     private static class ActiveJob {
         final UUID playerId;
         final ResourceKey<Level> dimension;
@@ -58,7 +64,7 @@ public class BlockPlacementQueue {
         final GenerationFlags flags;
         final Queue<PlannedBlock> queue;
         final List<PlannedBlock> recordedUndo;
-        final boolean isUndoJob;
+        final JobType jobType;
         int placedCount = 0;
 
         ActiveJob(
@@ -67,7 +73,7 @@ public class BlockPlacementQueue {
                 String description,
                 GenerationFlags flags,
                 List<PlannedBlock> blocks,
-                boolean isUndoJob
+                JobType jobType
         ) {
             this.playerId = playerId;
             this.dimension = dimension;
@@ -75,12 +81,13 @@ public class BlockPlacementQueue {
             this.flags = flags;
             this.queue = new ArrayDeque<>(blocks);
             this.recordedUndo = new ArrayList<>(blocks.size());
-            this.isUndoJob = isUndoJob;
+            this.jobType = jobType;
         }
     }
 
     private static final List<ActiveJob> ACTIVE_JOBS = Collections.synchronizedList(new ArrayList<>());
     private static final Map<UUID, Deque<UndoSnapshot>> UNDO_HISTORY = new ConcurrentHashMap<>();
+    private static final Map<UUID, Deque<UndoSnapshot>> REDO_HISTORY = new ConcurrentHashMap<>();
 
     public static class Builder {
         private final Map<BlockPos, PlannedBlock> staged = new LinkedHashMap<>();
@@ -113,7 +120,8 @@ public class BlockPlacementQueue {
             player.sendSystemMessage(Component.translatable("message.furbuild.generate.empty").withStyle(ChatFormatting.YELLOW));
             return;
         }
-        ActiveJob job = new ActiveJob(player.getUUID(), level.dimension(), description, flags, blocks, false);
+        REDO_HISTORY.remove(player.getUUID());
+        ActiveJob job = new ActiveJob(player.getUUID(), level.dimension(), description, flags, blocks, JobType.GENERATE);
         ACTIVE_JOBS.add(job);
         player.sendSystemMessage(
                 Component.translatable("message.furbuild.generate.queued",
@@ -137,22 +145,62 @@ public class BlockPlacementQueue {
         List<PlannedBlock> reversed = new ArrayList<>(snapshot.previousStates());
         Collections.reverse(reversed);
 
+        String baseDesc = stripActionPrefix(snapshot.description());
         ActiveJob undoJob = new ActiveJob(
                 player.getUUID(),
                 snapshot.dimension(),
-                "Undo: " + snapshot.description(),
+                "Undo: " + baseDesc,
                 GenerationFlags.DEFAULT,
                 reversed,
-                true
+                JobType.UNDO
         );
         ACTIVE_JOBS.add(undoJob);
         player.sendSystemMessage(
                 Component.translatable("message.furbuild.undo.started",
                         reversed.size(),
-                        Component.literal(snapshot.description()).withStyle(ChatFormatting.AQUA)
+                        Component.literal(baseDesc).withStyle(ChatFormatting.AQUA)
                 ).withStyle(ChatFormatting.GOLD)
         );
         return true;
+    }
+
+    public static boolean enqueueRedo(ServerPlayer player) {
+        Deque<UndoSnapshot> history = REDO_HISTORY.get(player.getUUID());
+        if (history == null || history.isEmpty()) {
+            return false;
+        }
+        UndoSnapshot snapshot = history.pop();
+        ServerLevel targetLevel = player.server.getLevel(snapshot.dimension());
+        if (targetLevel == null) {
+            return false;
+        }
+
+        List<PlannedBlock> reversed = new ArrayList<>(snapshot.previousStates());
+        Collections.reverse(reversed);
+
+        String baseDesc = stripActionPrefix(snapshot.description());
+        ActiveJob redoJob = new ActiveJob(
+                player.getUUID(),
+                snapshot.dimension(),
+                "Redo: " + baseDesc,
+                GenerationFlags.DEFAULT,
+                reversed,
+                JobType.REDO
+        );
+        ACTIVE_JOBS.add(redoJob);
+        player.sendSystemMessage(
+                Component.translatable("message.furbuild.redo.started",
+                        reversed.size(),
+                        Component.literal(baseDesc).withStyle(ChatFormatting.AQUA)
+                ).withStyle(ChatFormatting.GOLD)
+        );
+        return true;
+    }
+
+    private static String stripActionPrefix(String description) {
+        if (description.startsWith("Undo: ")) return description.substring(6);
+        if (description.startsWith("Redo: ")) return description.substring(6);
+        return description;
     }
 
     public static void tick(MinecraftServer server) {
@@ -184,7 +232,7 @@ public class BlockPlacementQueue {
                     }
 
                     BlockState existing = level.getBlockState(pos);
-                    if (!job.isUndoJob && !job.flags.canOverwrite(existing)) {
+                    if (job.jobType == JobType.GENERATE && !job.flags.canOverwrite(existing)) {
                         continue;
                     }
 
@@ -192,14 +240,12 @@ public class BlockPlacementQueue {
                         continue;
                     }
 
-                    if (!job.isUndoJob) {
-                        CompoundTag oldBeTag = null;
-                        BlockEntity existingBe = level.getBlockEntity(pos);
-                        if (existingBe != null) {
-                            oldBeTag = existingBe.saveWithFullMetadata(level.registryAccess());
-                        }
-                        job.recordedUndo.add(new PlannedBlock(pos, existing, Optional.ofNullable(oldBeTag)));
+                    CompoundTag oldBeTag = null;
+                    BlockEntity existingBe = level.getBlockEntity(pos);
+                    if (existingBe != null) {
+                        oldBeTag = existingBe.saveWithFullMetadata(level.registryAccess());
                     }
+                    job.recordedUndo.add(new PlannedBlock(pos, existing, Optional.ofNullable(oldBeTag)));
 
                     level.setBlock(pos, next.state(), Block.UPDATE_CLIENTS);
                     if (next.blockEntityTag().isPresent()) {
@@ -238,9 +284,11 @@ public class BlockPlacementQueue {
 
                 if (job.queue.isEmpty()) {
                     iterator.remove();
-                    if (!job.isUndoJob && !job.recordedUndo.isEmpty()) {
-                        Deque<UndoSnapshot> stack = UNDO_HISTORY.computeIfAbsent(job.playerId, k -> new ArrayDeque<>());
-                        stack.push(new UndoSnapshot(job.description, job.dimension, job.recordedUndo));
+                    if (!job.recordedUndo.isEmpty()) {
+                        Map<UUID, Deque<UndoSnapshot>> targetHistory =
+                                job.jobType == JobType.UNDO ? REDO_HISTORY : UNDO_HISTORY;
+                        Deque<UndoSnapshot> stack = targetHistory.computeIfAbsent(job.playerId, k -> new ArrayDeque<>());
+                        stack.push(new UndoSnapshot(stripActionPrefix(job.description), job.dimension, job.recordedUndo));
                         while (stack.size() > MAX_UNDO_HISTORY) {
                             stack.removeLast();
                         }
@@ -248,9 +296,11 @@ public class BlockPlacementQueue {
 
                     ServerPlayer player = server.getPlayerList().getPlayer(job.playerId);
                     if (player != null) {
-                        String key = job.isUndoJob
-                                ? "message.furbuild.undo.completed"
-                                : "message.furbuild.generate.completed";
+                        String key = switch (job.jobType) {
+                            case UNDO -> "message.furbuild.undo.completed";
+                            case REDO -> "message.furbuild.redo.completed";
+                            case GENERATE -> "message.furbuild.generate.completed";
+                        };
                         player.sendSystemMessage(
                                 Component.translatable(key,
                                         job.placedCount,
@@ -266,5 +316,6 @@ public class BlockPlacementQueue {
     public static void clearAll() {
         ACTIVE_JOBS.clear();
         UNDO_HISTORY.clear();
+        REDO_HISTORY.clear();
     }
 }

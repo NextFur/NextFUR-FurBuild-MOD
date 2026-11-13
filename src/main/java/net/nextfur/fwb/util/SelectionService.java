@@ -8,15 +8,21 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.nextfur.fwb.data.PlayerSelectionData;
 import net.nextfur.fwb.data.SelectionMode;
 import net.nextfur.fwb.init.FwAttachments;
 import net.nextfur.fwb.init.FwDataComponents;
 import net.nextfur.fwb.items.GenerateWandItem;
+import net.nextfur.fwb.items.SelectWandItem;
 import net.nextfur.fwb.network.SelectionSyncS2CPacket;
+import net.nextfur.fwb.style.ModuleCategory;
+import net.nextfur.fwb.style.StyleManager;
+import net.nextfur.fwb.style.StyleModuleEntry;
 
 import java.util.Locale;
+import java.util.Optional;
 
 public class SelectionService {
 
@@ -62,6 +68,19 @@ public class SelectionService {
     public static void cycleWandMode(ServerPlayer player, int direction) {
         ItemStack mainHand = player.getMainHandItem();
         ItemStack offHand = player.getOffhandItem();
+
+        if (mainHand.getItem() instanceof SelectWandItem || (!(mainHand.getItem() instanceof GenerateWandItem) && offHand.getItem() instanceof SelectWandItem)) {
+            ModuleCategory currentCat = getSelection(player).activeSelectCategory();
+            if (mainHand.getItem() instanceof SelectWandItem) {
+                currentCat = mainHand.getOrDefault(FwDataComponents.SELECT_CATEGORY, currentCat);
+            } else if (offHand.getItem() instanceof SelectWandItem) {
+                currentCat = offHand.getOrDefault(FwDataComponents.SELECT_CATEGORY, currentCat);
+            }
+            ModuleCategory nextCat = currentCat.next(direction);
+            setSelectCategory(player, nextCat);
+            return;
+        }
+
         SelectionMode currentMode = getSelection(player).mode();
 
         if (mainHand.getItem() instanceof GenerateWandItem) {
@@ -72,6 +91,104 @@ public class SelectionService {
 
         SelectionMode nextMode = currentMode.next(direction);
         setWandMode(player, nextMode);
+    }
+
+    public static void setSelectCategory(ServerPlayer player, ModuleCategory category) {
+        PlayerSelectionData current = getSelection(player);
+        PlayerSelectionData updated = current.withActiveSelectCategory(category);
+        setSelection(player, updated);
+
+        for (InteractionHand hand : InteractionHand.values()) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (stack.getItem() instanceof SelectWandItem) {
+                stack.set(FwDataComponents.SELECT_CATEGORY, category);
+            }
+        }
+
+        player.displayClientMessage(
+                Component.translatable("message.furbuild.select_wand.category_changed",
+                        Component.literal(category.getSerializedName()).withStyle(ChatFormatting.AQUA)
+                ).withStyle(ChatFormatting.GOLD),
+                true
+        );
+        player.level().playSound(null, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.PLAYERS, 0.5f, 1.3f);
+    }
+
+    public static void handleSelectWandLeftClick(ServerPlayer player, ItemStack stack, BlockPos pos) {
+        ModuleCategory cat = stack.getOrDefault(FwDataComponents.SELECT_CATEGORY, getSelection(player).activeSelectCategory());
+        PlayerSelectionData current = getSelection(player).withActiveSelectCategory(cat);
+        PlayerSelectionData updated = current.withSelectPosA(pos);
+        setSelection(player, updated);
+        player.displayClientMessage(
+                Component.translatable("message.furbuild.select_wand.pos_a",
+                        formatPos(pos),
+                        Component.literal(cat.getSerializedName()).withStyle(ChatFormatting.AQUA)
+                ).withStyle(ChatFormatting.GREEN),
+                true
+        );
+    }
+
+    public static void handleSelectWandRightClick(ServerPlayer player, ItemStack stack, BlockPos pos) {
+        ModuleCategory cat = stack.getOrDefault(FwDataComponents.SELECT_CATEGORY, getSelection(player).activeSelectCategory());
+        PlayerSelectionData current = getSelection(player).withActiveSelectCategory(cat);
+        PlayerSelectionData updated = current.withSelectPosB(pos);
+        setSelection(player, updated);
+        player.displayClientMessage(
+                Component.translatable("message.furbuild.select_wand.pos_b",
+                        formatPos(pos),
+                        Component.literal(cat.getSerializedName()).withStyle(ChatFormatting.AQUA)
+                ).withStyle(ChatFormatting.AQUA),
+                true
+        );
+    }
+
+    public static void handleSelectWandQuickMap(ServerPlayer player, ItemStack stack) {
+        PlayerSelectionData selection = getSelection(player);
+        String styleName = selection.activeMappingStyle();
+        if (styleName == null || styleName.isBlank()) {
+            player.displayClientMessage(
+                    Component.translatable("message.furbuild.map.no_session").withStyle(ChatFormatting.RED),
+                    false
+            );
+            return;
+        }
+        Optional<BoundingBox> objBoxOpt = selection.getSelectObjectBoundingBox();
+        if (objBoxOpt.isEmpty()) {
+            player.displayClientMessage(
+                    Component.translatable("message.furbuild.map.need_select").withStyle(ChatFormatting.RED),
+                    false
+            );
+            return;
+        }
+
+        ModuleCategory category = stack.getOrDefault(FwDataComponents.SELECT_CATEGORY, selection.activeSelectCategory());
+        int index = selection.mappedObjects().size() + 1;
+        String moduleName = category.getSerializedName() + "_" + index;
+
+        try {
+            StyleModuleEntry entry = StyleManager.saveMappedModule(
+                    player.serverLevel(),
+                    styleName,
+                    category,
+                    moduleName,
+                    1.0,
+                    objBoxOpt.get(),
+                    selection.getBoundingBox()
+            );
+            PlayerSelectionData updated = selection.withAddedMappedObject(objBoxOpt.get());
+            setSelection(player, updated);
+
+            player.sendSystemMessage(
+                    Component.translatable("message.furbuild.map.saved",
+                            Component.literal(entry.name()).withStyle(ChatFormatting.AQUA),
+                            Component.literal(category.getSerializedName()).withStyle(ChatFormatting.GOLD),
+                            Component.literal(styleName).withStyle(ChatFormatting.GREEN)
+                    ).withStyle(ChatFormatting.GREEN)
+            );
+            player.level().playSound(null, player.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.7f, 1.2f);
+        } catch (Exception e) {
+            player.sendSystemMessage(Component.translatable("message.furbuild.style.error", e.getMessage()).withStyle(ChatFormatting.RED));
+        }
     }
 
     public static void handleStyleWandLeftClick(ServerPlayer player, BlockPos pos) {

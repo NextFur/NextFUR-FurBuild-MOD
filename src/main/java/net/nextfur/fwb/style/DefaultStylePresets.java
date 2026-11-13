@@ -13,10 +13,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.LanternBlock;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.nextfur.fwb.FwMain;
 
 import java.io.IOException;
@@ -30,15 +33,26 @@ import java.util.Map;
 public class DefaultStylePresets {
 
     public static final List<String> PRESET_NAMES = List.of("medieval", "cyberpunk", "nordic", "desert");
+    private static final String PRESET_VERSION = "v2_architectural";
 
     /**
-     * Generates all built-in preset styles if they do not exist yet, or overwrites them when force=true.
+     * Generates all built-in preset styles if they do not exist yet or are outdated, or overwrites them when force=true.
      */
     public static int installPresets(MinecraftServer server, boolean force) {
         int installedCount = 0;
         for (String preset : PRESET_NAMES) {
-            Path styleJson = StyleManager.getStyleDir(server, preset).resolve("style.json");
-            if (!force && Files.exists(styleJson)) {
+            Path styleDir = StyleManager.getStyleDir(server, preset);
+            Path styleJson = styleDir.resolve("style.json");
+            Path versionFile = styleDir.resolve("preset_version.txt");
+            boolean upToDate = Files.exists(styleJson) && Files.exists(versionFile);
+            if (upToDate) {
+                try {
+                    upToDate = PRESET_VERSION.equals(Files.readString(versionFile).trim());
+                } catch (IOException ignored) {
+                    upToDate = false;
+                }
+            }
+            if (!force && upToDate) {
                 continue;
             }
             try {
@@ -48,6 +62,8 @@ public class DefaultStylePresets {
                     case "nordic" -> createNordicPreset(server);
                     case "desert" -> createDesertPreset(server);
                 }
+                Files.createDirectories(styleDir);
+                Files.writeString(versionFile, PRESET_VERSION);
                 installedCount++;
             } catch (Exception e) {
                 FwMain.LOGGER.error("Failed to generate preset style '{}'", preset, e);
@@ -230,14 +246,15 @@ public class DefaultStylePresets {
             BlockState roadFill,
             BlockState intersectionCenter
     ) throws IOException {
-        StyleDefinition def = StyleManager.createStyle(server, styleName, 5);
+        StyleDefinition def = StyleManager.createStyle(server, styleName, 5)
+                .withWindowFrequency("cyberpunk".equals(styleName) ? 1 : 2);
 
         // Save the 3 palettes
         def = savePresetPalette(server, def, new BlockPalette("painting", paintingWeights));
         def = savePresetPalette(server, def, new BlockPalette("path_blocks", pathWeights));
         def = savePresetPalette(server, def, new BlockPalette("floor", floorWeights));
 
-        // 1. WALL module (5x4x1, facing NORTH -Z)
+        // 1. WALL modules (5x4x1, facing NORTH -Z)
         SchematicBuilder wall = new SchematicBuilder(5, 4, 1);
         for (int x = 0; x < 5; x++) {
             for (int y = 0; y < 4; y++) {
@@ -252,6 +269,24 @@ public class DefaultStylePresets {
         }
         def = savePresetModule(server, def, ModuleCategory.WALL, "standard_wall", 1.0, wall);
 
+        SchematicBuilder archedWall = new SchematicBuilder(5, 4, 1);
+        for (int x = 0; x < 5; x++) {
+            for (int y = 0; y < 4; y++) {
+                if (x == 0 || x == 4 || y == 3) {
+                    archedWall.set(x, y, 0, pillarBlock);
+                } else if (y == 0) {
+                    archedWall.set(x, y, 0, baseTrim);
+                } else if (y == 2 && x == 1) {
+                    archedWall.set(x, y, 0, roofStairBase.setValue(StairBlock.FACING, Direction.WEST).setValue(StairBlock.HALF, Half.TOP));
+                } else if (y == 2 && x == 3) {
+                    archedWall.set(x, y, 0, roofStairBase.setValue(StairBlock.FACING, Direction.EAST).setValue(StairBlock.HALF, Half.TOP));
+                } else {
+                    archedWall.set(x, y, 0, paintableWallFill);
+                }
+            }
+        }
+        def = savePresetModule(server, def, ModuleCategory.WALL, "arched_wall", 0.75, archedWall);
+
         // 2. CORNER module (1x4x1)
         SchematicBuilder corner = new SchematicBuilder(1, 4, 1);
         corner.set(0, 0, 0, baseTrim);
@@ -260,7 +295,7 @@ public class DefaultStylePresets {
         }
         def = savePresetModule(server, def, ModuleCategory.CORNER, "pillar_corner", 1.0, corner);
 
-        // 3. WINDOW module (5x4x1, facing NORTH -Z)
+        // 3. WINDOW modules (5x4x1, facing NORTH -Z)
         SchematicBuilder window = new SchematicBuilder(5, 4, 1);
         for (int x = 0; x < 5; x++) {
             for (int y = 0; y < 4; y++) {
@@ -276,6 +311,22 @@ public class DefaultStylePresets {
             }
         }
         def = savePresetModule(server, def, ModuleCategory.WINDOW, "framed_window", 1.0, window);
+
+        SchematicBuilder pairedWindow = new SchematicBuilder(5, 4, 1);
+        for (int x = 0; x < 5; x++) {
+            for (int y = 0; y < 4; y++) {
+                if (x == 0 || x == 4 || y == 3) {
+                    pairedWindow.set(x, y, 0, pillarBlock);
+                } else if (y == 0) {
+                    pairedWindow.set(x, y, 0, baseTrim);
+                } else if ((x == 1 || x == 3) && (y == 1 || y == 2)) {
+                    pairedWindow.set(x, y, 0, windowPane);
+                } else {
+                    pairedWindow.set(x, y, 0, paintableWallFill);
+                }
+            }
+        }
+        def = savePresetModule(server, def, ModuleCategory.WINDOW, "paired_window", "cyberpunk".equals(styleName) ? 1.5 : 0.85, pairedWindow);
 
         // 4. DOOR module (5x4x1, facing NORTH -Z)
         SchematicBuilder door = new SchematicBuilder(5, 4, 1);
@@ -401,6 +452,214 @@ public class DefaultStylePresets {
             }
         }
         def = savePresetModule(server, def, ModuleCategory.INTERSECTION, "crossroad", 1.0, intersection);
+
+        // 12. Style-specific WINDOW_ORNAMENT modules (facing NORTH -Z, placed outward from window)
+        if ("desert".equals(styleName)) {
+            // Protruding 3D Mashrabiya wooden lattice bay (5x4x2)
+            SchematicBuilder mashrabiya = new SchematicBuilder(5, 4, 2);
+            mashrabiya.set(1, 0, 1, Blocks.SPRUCE_STAIRS.defaultBlockState().setValue(StairBlock.FACING, Direction.SOUTH).setValue(StairBlock.HALF, Half.TOP));
+            mashrabiya.set(2, 0, 1, Blocks.SPRUCE_STAIRS.defaultBlockState().setValue(StairBlock.FACING, Direction.SOUTH).setValue(StairBlock.HALF, Half.TOP));
+            mashrabiya.set(3, 0, 1, Blocks.SPRUCE_STAIRS.defaultBlockState().setValue(StairBlock.FACING, Direction.SOUTH).setValue(StairBlock.HALF, Half.TOP));
+            mashrabiya.set(1, 1, 1, Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState());
+            mashrabiya.set(2, 1, 1, Blocks.SPRUCE_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            mashrabiya.set(3, 1, 1, Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState());
+            mashrabiya.set(1, 2, 1, Blocks.ACACIA_FENCE.defaultBlockState());
+            mashrabiya.set(2, 2, 1, Blocks.SPRUCE_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            mashrabiya.set(3, 2, 1, Blocks.ACACIA_FENCE.defaultBlockState());
+            mashrabiya.set(1, 3, 1, Blocks.SPRUCE_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.BOTTOM));
+            mashrabiya.set(2, 3, 1, Blocks.SPRUCE_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.BOTTOM));
+            mashrabiya.set(3, 3, 1, Blocks.SPRUCE_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.BOTTOM));
+            mashrabiya.set(2, 1, 0, Blocks.SPRUCE_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            mashrabiya.set(2, 2, 0, Blocks.SPRUCE_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            def = savePresetModule(server, def, ModuleCategory.WINDOW_ORNAMENT, "mashrabiya_bay", 1.2, mashrabiya);
+
+            // Sloped Terracotta Awning Canopy (5x4x2)
+            SchematicBuilder awning = new SchematicBuilder(5, 4, 2);
+            awning.set(1, 0, 0, Blocks.OAK_FENCE.defaultBlockState());
+            awning.set(3, 0, 0, Blocks.OAK_FENCE.defaultBlockState());
+            awning.set(1, 1, 0, Blocks.OAK_FENCE.defaultBlockState());
+            awning.set(3, 1, 0, Blocks.OAK_FENCE.defaultBlockState());
+            awning.set(1, 2, 0, Blocks.ORANGE_TERRACOTTA.defaultBlockState());
+            awning.set(2, 2, 0, Blocks.RED_TERRACOTTA.defaultBlockState());
+            awning.set(3, 2, 0, Blocks.ORANGE_TERRACOTTA.defaultBlockState());
+            awning.set(1, 3, 1, Blocks.SANDSTONE_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.BOTTOM));
+            awning.set(2, 3, 1, Blocks.ORANGE_TERRACOTTA.defaultBlockState());
+            awning.set(3, 3, 1, Blocks.SANDSTONE_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.BOTTOM));
+            def = savePresetModule(server, def, ModuleCategory.WINDOW_ORNAMENT, "terracotta_awning", 0.85, awning);
+        } else if ("cyberpunk".equals(styleName)) {
+            // Under-window AC Condenser Unit + Satellite Dish (5x4x1)
+            SchematicBuilder acUnit = new SchematicBuilder(5, 4, 1);
+            acUnit.set(1, 0, 0, Blocks.SMOOTH_STONE_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.TOP));
+            acUnit.set(2, 0, 0, Blocks.IRON_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            acUnit.set(3, 0, 0, Blocks.DAYLIGHT_DETECTOR.defaultBlockState());
+            acUnit.set(0, 2, 0, Blocks.IRON_BARS.defaultBlockState());
+            acUnit.set(0, 3, 0, Blocks.END_ROD.defaultBlockState());
+            def = savePresetModule(server, def, ModuleCategory.WINDOW_ORNAMENT, "ac_unit_dish", 1.2, acUnit);
+
+            // Vertical Neon Blade Sign projecting 2 blocks out (5x4x2)
+            SchematicBuilder neonSign = new SchematicBuilder(5, 4, 2);
+            neonSign.set(0, 0, 1, Blocks.IRON_BARS.defaultBlockState());
+            neonSign.set(0, 3, 1, Blocks.IRON_BARS.defaultBlockState());
+            neonSign.set(0, 0, 0, Blocks.MAGENTA_STAINED_GLASS_PANE.defaultBlockState());
+            neonSign.set(0, 1, 0, Blocks.SEA_LANTERN.defaultBlockState());
+            neonSign.set(0, 2, 0, Blocks.OCHRE_FROGLIGHT.defaultBlockState());
+            neonSign.set(0, 3, 0, Blocks.CYAN_STAINED_GLASS_PANE.defaultBlockState());
+            def = savePresetModule(server, def, ModuleCategory.WINDOW_ORNAMENT, "neon_blade_sign", 0.75, neonSign);
+        } else {
+            // Medieval / Nordic Shutter + Flower Planter (5x4x1)
+            SchematicBuilder winOrn = new SchematicBuilder(5, 4, 1);
+            winOrn.set(2, 0, 0, roofStairBase.setValue(StairBlock.FACING, Direction.SOUTH).setValue(StairBlock.HALF, Half.TOP));
+            winOrn.set(1, 1, 0, Blocks.SPRUCE_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            winOrn.set(1, 2, 0, Blocks.SPRUCE_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            winOrn.set(2, 1, 0, Blocks.POTTED_OXEYE_DAISY.defaultBlockState());
+            winOrn.set(3, 1, 0, Blocks.SPRUCE_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            winOrn.set(3, 2, 0, Blocks.SPRUCE_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            winOrn.set(2, 3, 0, Blocks.SPRUCE_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.BOTTOM));
+            def = savePresetModule(server, def, ModuleCategory.WINDOW_ORNAMENT, "shutter_planter", 1.2, winOrn);
+
+            // Projecting Timber Oriel Window Box (5x4x2)
+            SchematicBuilder timberOriel = new SchematicBuilder(5, 4, 2);
+            timberOriel.set(2, 0, 1, roofStairBase.setValue(StairBlock.FACING, Direction.SOUTH).setValue(StairBlock.HALF, Half.TOP));
+            timberOriel.set(1, 1, 1, Blocks.SPRUCE_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            timberOriel.set(2, 1, 1, Blocks.GRASS_BLOCK.defaultBlockState());
+            timberOriel.set(3, 1, 1, Blocks.SPRUCE_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            timberOriel.set(2, 1, 0, Blocks.SPRUCE_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH).setValue(TrapDoorBlock.OPEN, true));
+            timberOriel.set(2, 2, 1, Blocks.POPPY.defaultBlockState());
+            timberOriel.set(2, 3, 1, lanternBase.setValue(LanternBlock.HANGING, true));
+            def = savePresetModule(server, def, ModuleCategory.WINDOW_ORNAMENT, "timber_oriel", 0.75, timberOriel);
+        }
+
+        // 13. ROAD_SMALL module (3x1x5)
+        SchematicBuilder roadSmall = new SchematicBuilder(3, 1, 5);
+        for (int x = 0; x < 3; x++) {
+            for (int z = 0; z < 5; z++) {
+                roadSmall.set(x, 0, z, (x == 0 || x == 2) ? baseTrim : roadFill);
+            }
+        }
+        def = savePresetModule(server, def, ModuleCategory.ROAD_SMALL, "narrow_lane", 1.0, roadSmall);
+
+        // 14. ROAD_BIG module (7x1x5)
+        SchematicBuilder roadBig = new SchematicBuilder(7, 1, 5);
+        for (int x = 0; x < 7; x++) {
+            for (int z = 0; z < 5; z++) {
+                if (x == 0 || x == 6) {
+                    roadBig.set(x, 0, z, baseTrim);
+                } else if (x == 3 && (z % 2 == 0)) {
+                    roadBig.set(x, 0, z, intersectionCenter);
+                } else {
+                    roadBig.set(x, 0, z, roadFill);
+                }
+            }
+        }
+        def = savePresetModule(server, def, ModuleCategory.ROAD_BIG, "grand_avenue", 1.0, roadBig);
+
+        // 15. INTERSECTION_BIG module (7x1x7)
+        SchematicBuilder bigInt = new SchematicBuilder(7, 1, 7);
+        for (int x = 0; x < 7; x++) {
+            for (int z = 0; z < 7; z++) {
+                if (x >= 2 && x <= 4 && z >= 2 && z <= 4) {
+                    bigInt.set(x, 0, z, intersectionCenter);
+                } else if ((x == 0 || x == 6) && (z == 0 || z == 6)) {
+                    bigInt.set(x, 0, z, baseTrim);
+                } else {
+                    bigInt.set(x, 0, z, roadFill);
+                }
+            }
+        }
+        def = savePresetModule(server, def, ModuleCategory.INTERSECTION_BIG, "grand_crossroad", 1.0, bigInt);
+
+        // 16. ROAD_SIGNAL module (1x4x1)
+        SchematicBuilder roadSignal = new SchematicBuilder(1, 4, 1);
+        roadSignal.set(0, 0, 0, baseTrim);
+        roadSignal.set(0, 1, 0, Blocks.IRON_BARS.defaultBlockState());
+        roadSignal.set(0, 2, 0, Blocks.IRON_BARS.defaultBlockState());
+        roadSignal.set(0, 3, 0, lanternBase.setValue(LanternBlock.HANGING, false));
+        def = savePresetModule(server, def, ModuleCategory.ROAD_SIGNAL, "street_signal", 1.0, roadSignal);
+
+        // 17. ROAD_ORNAMENT module (1x4x1)
+        SchematicBuilder roadOrnament = new SchematicBuilder(1, 4, 1);
+        roadOrnament.set(0, 0, 0, baseTrim);
+        roadOrnament.set(0, 1, 0, postWall);
+        roadOrnament.set(0, 2, 0, postWall);
+        roadOrnament.set(0, 3, 0, lanternBase.setValue(LanternBlock.HANGING, false));
+        def = savePresetModule(server, def, ModuleCategory.ROAD_ORNAMENT, "road_lantern", 1.0, roadOrnament);
+
+        // 18. ROAD_PROP module (2x1x1)
+        SchematicBuilder roadProp = new SchematicBuilder(2, 1, 1);
+        roadProp.set(0, 0, 0, roofStairBase.setValue(StairBlock.FACING, Direction.SOUTH).setValue(StairBlock.HALF, Half.BOTTOM));
+        roadProp.set(1, 0, 0, Blocks.BARREL.defaultBlockState());
+        def = savePresetModule(server, def, ModuleCategory.ROAD_PROP, "street_bench_barrel", 1.0, roadProp);
+
+        // 19. BALCONY module (5x2x2)
+        SchematicBuilder balcony = new SchematicBuilder(5, 2, 2);
+        for (int x = 0; x < 5; x++) {
+            balcony.set(x, 0, 0, roofPlank);
+            balcony.set(x, 0, 1, roofPlank);
+            balcony.set(x, 1, 0, postWall);
+        }
+        balcony.set(0, 1, 1, postWall);
+        balcony.set(4, 1, 1, postWall);
+        def = savePresetModule(server, def, ModuleCategory.BALCONY, "timber_balcony", 1.0, balcony);
+
+        // 20. CHIMNEY module (1x4x1)
+        SchematicBuilder chimney = new SchematicBuilder(1, 4, 1);
+        chimney.set(0, 0, 0, baseTrim);
+        chimney.set(0, 1, 0, baseTrim);
+        chimney.set(0, 2, 0, postWall);
+        chimney.set(0, 3, 0, Blocks.CAMPFIRE.defaultBlockState());
+        def = savePresetModule(server, def, ModuleCategory.CHIMNEY, "hearth_chimney", 1.0, chimney);
+
+        // 21. TRIM module (5x1x1)
+        SchematicBuilder trim = new SchematicBuilder(5, 1, 1);
+        for (int x = 0; x < 5; x++) {
+            trim.set(x, 0, 0, Blocks.SPRUCE_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.TOP));
+        }
+        def = savePresetModule(server, def, ModuleCategory.TRIM, "floor_cornice", 1.0, trim);
+
+        // 22. PILLAR module (5x4x1)
+        SchematicBuilder pillar = new SchematicBuilder(5, 4, 1);
+        for (int x = 0; x < 5; x++) {
+            for (int y = 0; y < 4; y++) {
+                if (x == 0 || x == 2 || x == 4 || y == 3) {
+                    pillar.set(x, y, 0, pillarBlock);
+                } else if (y == 0) {
+                    pillar.set(x, y, 0, baseTrim);
+                } else {
+                    pillar.set(x, y, 0, paintableWallFill);
+                }
+            }
+        }
+        def = savePresetModule(server, def, ModuleCategory.PILLAR, "colonnade_wall", 1.0, pillar);
+
+        // 23. INTERIOR_WALL module (3x2x1)
+        SchematicBuilder intWall = new SchematicBuilder(3, 2, 1);
+        intWall.set(0, 0, 0, propAccent);
+        intWall.set(0, 1, 0, propAccent);
+        intWall.set(1, 0, 0, Blocks.CRAFTING_TABLE.defaultBlockState());
+        intWall.set(2, 0, 0, Blocks.CHEST.defaultBlockState());
+        def = savePresetModule(server, def, ModuleCategory.INTERIOR_WALL, "wall_shelf", 1.0, intWall);
+
+        // 24. INTERIOR_CENTER module (2x2x2)
+        SchematicBuilder intCenter = new SchematicBuilder(2, 2, 2);
+        intCenter.set(0, 0, 0, Blocks.OAK_FENCE.defaultBlockState());
+        intCenter.set(1, 0, 0, Blocks.OAK_FENCE.defaultBlockState());
+        intCenter.set(0, 1, 0, Blocks.SPRUCE_PRESSURE_PLATE.defaultBlockState());
+        intCenter.set(1, 1, 0, lanternBase.setValue(LanternBlock.HANGING, false));
+        intCenter.set(0, 0, 1, Blocks.RED_CARPET.defaultBlockState());
+        intCenter.set(1, 0, 1, Blocks.RED_CARPET.defaultBlockState());
+        def = savePresetModule(server, def, ModuleCategory.INTERIOR_CENTER, "center_table", 1.0, intCenter);
+
+        // 25. INTERIOR_CEILING module (1x2x1)
+        SchematicBuilder intCeiling = new SchematicBuilder(1, 2, 1);
+        intCeiling.set(0, 1, 0, Blocks.CHAIN.defaultBlockState());
+        intCeiling.set(0, 0, 0, lanternBase.setValue(LanternBlock.HANGING, true));
+        def = savePresetModule(server, def, ModuleCategory.INTERIOR_CEILING, "chandelier", 1.0, intCeiling);
+
+        // 26. INTERIOR_CORNER module (1x2x1)
+        SchematicBuilder intCorner = new SchematicBuilder(1, 2, 1);
+        intCorner.set(0, 0, 0, propAccent);
+        intCorner.set(0, 1, 0, Blocks.POTTED_FERN.defaultBlockState());
+        def = savePresetModule(server, def, ModuleCategory.INTERIOR_CORNER, "corner_stand", 1.0, intCorner);
 
         StyleManager.saveStyleDefinition(server, def);
     }

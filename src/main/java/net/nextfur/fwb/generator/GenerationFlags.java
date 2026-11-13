@@ -21,13 +21,32 @@ public record GenerationFlags(
         Set<Block> blacklist,
         Set<ModuleCategory> excludedCategories,
         AlignMode alignMode,
-        int width,
-        boolean includeInterior
+        OptionalInt width,
+        boolean includeInterior,
+        OptionalInt windowFrequency,
+        RoadMode roadMode,
+        BuildingType buildingType,
+        OptionalInt buildingDistance
 ) {
     public enum AlignMode {
         GROUND,
         SELECTION,
         AUTO
+    }
+
+    public enum RoadMode {
+        AUTO,
+        SMALL,
+        BIG;
+
+        public static RoadMode byName(String name) {
+            if (name == null) return AUTO;
+            return switch (name.toLowerCase(Locale.ROOT)) {
+                case "small", "narrow", "local" -> SMALL;
+                case "big", "large", "avenue", "highway" -> BIG;
+                default -> AUTO;
+            };
+        }
     }
 
     public static final GenerationFlags DEFAULT = new GenerationFlags(
@@ -37,9 +56,17 @@ public record GenerationFlags(
             Set.of(),
             Set.of(),
             AlignMode.AUTO,
-            4,
-            false
+            OptionalInt.empty(),
+            false,
+            OptionalInt.empty(),
+            RoadMode.AUTO,
+            BuildingType.AUTO,
+            OptionalInt.empty()
     );
+
+    public int widthOrDefault(int fallback) {
+        return width.isPresent() ? width.getAsInt() : fallback;
+    }
 
     public boolean canOverwrite(BlockState existingState) {
         Block block = existingState.getBlock();
@@ -73,8 +100,12 @@ public record GenerationFlags(
         Set<Block> blacklist = new HashSet<>();
         Set<ModuleCategory> excluded = EnumSet.noneOf(ModuleCategory.class);
         AlignMode alignMode = AlignMode.AUTO;
-        int width = 4;
+        OptionalInt width = OptionalInt.empty();
         boolean includeInterior = false;
+        OptionalInt windowFrequency = OptionalInt.empty();
+        RoadMode roadMode = RoadMode.AUTO;
+        BuildingType buildingType = BuildingType.AUTO;
+        OptionalInt buildingDistance = OptionalInt.empty();
 
         String[] tokens = rawArgs.trim().split("\\s+");
         int i = 0;
@@ -133,12 +164,46 @@ public record GenerationFlags(
                 case "-width", "-w" -> {
                     if (i + 1 < tokens.length) {
                         try {
-                            width = Math.max(1, Integer.parseInt(tokens[++i]));
+                            width = OptionalInt.of(Math.max(1, Integer.parseInt(tokens[++i])));
                         } catch (NumberFormatException ignored) {
                         }
                     }
                 }
                 case "-interior" -> includeInterior = true;
+                case "-winfreq", "-windowfreq", "-wf" -> {
+                    if (i + 1 < tokens.length) {
+                        String val = tokens[++i].toLowerCase(Locale.ROOT);
+                        if (val.equals("random") || val.equals("varied") || val.equals("auto")) {
+                            windowFrequency = OptionalInt.of(0);
+                        } else {
+                            try {
+                                windowFrequency = OptionalInt.of(Math.max(0, Integer.parseInt(val)));
+                            } catch (NumberFormatException ignored) {
+                            }
+                        }
+                    }
+                }
+                case "-road", "-roadtype" -> {
+                    if (i + 1 < tokens.length) {
+                        roadMode = RoadMode.byName(tokens[++i]);
+                    }
+                }
+                case "-btype", "-buildingtype", "-type" -> {
+                    if (i + 1 < tokens.length) {
+                        BuildingType parsed = BuildingType.byName(tokens[++i]);
+                        if (parsed != null) {
+                            buildingType = parsed;
+                        }
+                    }
+                }
+                case "-distance", "-setback", "-dist" -> {
+                    if (i + 1 < tokens.length) {
+                        try {
+                            buildingDistance = OptionalInt.of(Math.max(0, Integer.parseInt(tokens[++i])));
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
+                }
                 default -> {
                 }
             }
@@ -153,7 +218,11 @@ public record GenerationFlags(
                 Collections.unmodifiableSet(excluded),
                 alignMode,
                 width,
-                includeInterior
+                includeInterior,
+                windowFrequency,
+                roadMode,
+                buildingType,
+                buildingDistance
         );
     }
 

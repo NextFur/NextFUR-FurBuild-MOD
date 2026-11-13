@@ -67,7 +67,13 @@ public class PathGeneratorEngine {
 
         Optional<BlockPalette> paintingPalette = StyleManager.loadPalette(level.getServer(), style.styleName(), "painting");
         boolean snapToGround = flags.resolveSnapToGround(GenerationType.PATH);
-        double radius = Math.max(1.0, flags.width() / 2.0);
+        int defaultWidth = switch (flags.roadMode()) {
+            case SMALL -> 3;
+            case BIG -> 7;
+            case AUTO -> 4;
+        };
+        int resolvedWidth = flags.widthOrDefault(defaultWidth);
+        double radius = Math.max(1.0, resolvedWidth / 2.0);
         int ceilRadius = (int) Math.ceil(radius + 1.0);
 
         List<Vec3> curve = SplineMath.sampleCatmullRom(waypoints, 0.45);
@@ -128,9 +134,12 @@ public class PathGeneratorEngine {
                 }
             }
 
-            // Occasionally place ornament modules along the outer edge of the path
+            // Occasionally place road ornaments, road props, or signals along the outer edge of the path
             stepCounter++;
-            if (!flags.isExcluded(ModuleCategory.ORNAMENT) && stepCounter % ornamentInterval == 0 && idx + 1 < curve.size()) {
+            boolean allowRoadOrnaments = !flags.isExcluded(ModuleCategory.ROAD_ORNAMENT) && !flags.isExcluded(ModuleCategory.ORNAMENT);
+            boolean allowRoadProps = !flags.isExcluded(ModuleCategory.ROAD_PROP);
+            boolean allowRoadSignals = !flags.isExcluded(ModuleCategory.ROAD_SIGNAL);
+            if ((allowRoadOrnaments || allowRoadProps || allowRoadSignals) && stepCounter % ornamentInterval == 0 && idx + 1 < curve.size()) {
                 Vec3 next = curve.get(idx + 1);
                 double tangentX = next.x - center.x;
                 double tangentZ = next.z - center.z;
@@ -150,13 +159,23 @@ public class PathGeneratorEngine {
                             : (int) Math.round(center.y) + 1;
 
                     BlockPos ornamentOrigin = new BlockPos(ox, oy, oz);
-                    Optional<StyleModuleEntry> ornamentOpt = style.pickWeightedModule(ModuleCategory.ORNAMENT, random);
-                    if (ornamentOpt.isPresent()) {
+                    Optional<StyleModuleEntry> chosenMod = Optional.empty();
+                    double roll = random.nextDouble();
+                    if (allowRoadSignals && roll < 0.20) {
+                        chosenMod = style.pickWeightedModule(ModuleCategory.ROAD_SIGNAL, random);
+                    }
+                    if (chosenMod.isEmpty() && allowRoadProps && roll < 0.55) {
+                        chosenMod = style.pickWeightedModule(ModuleCategory.ROAD_PROP, random);
+                    }
+                    if (chosenMod.isEmpty() && allowRoadOrnaments) {
+                        chosenMod = style.pickWeightedModuleWithFallback(random, ModuleCategory.ROAD_ORNAMENT, ModuleCategory.ORNAMENT);
+                    }
+                    if (chosenMod.isPresent()) {
                         Rotation rot = rotationFromNormal(-normalX, -normalZ);
                         TemplatePlacementHelper.placeModuleIntoBuilder(
                                 level,
                                 style.styleName(),
-                                ornamentOpt.get(),
+                                chosenMod.get(),
                                 ornamentOrigin,
                                 rot,
                                 Mirror.NONE,

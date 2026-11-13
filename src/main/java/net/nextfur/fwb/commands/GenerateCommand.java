@@ -24,7 +24,8 @@ public class GenerateCommand {
         int lastSpace = remaining.lastIndexOf(' ');
         var offsetBuilder = lastSpace >= 0 ? builder.createOffset(builder.getStart() + lastSpace + 1) : builder;
         return SharedSuggestionProvider.suggest(
-                List.of("-floors", "-seed", "-whitelist", "-blacklist", "-exclude", "-align", "-width", "-interior"),
+                List.of("-floors", "-seed", "-whitelist", "-blacklist", "-exclude", "-align", "-width", "-interior",
+                        "-winfreq", "-road", "-btype", "-distance"),
                 offsetBuilder
         );
     };

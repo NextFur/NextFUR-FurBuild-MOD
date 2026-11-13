@@ -6,6 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.nextfur.fwb.items.GenerateWandItem;
+import net.nextfur.fwb.items.SelectWandItem;
 import net.nextfur.fwb.network.WandModeCycleC2SPacket;
 
 public class WandClientInputHandler {
@@ -23,7 +24,11 @@ public class WandClientInputHandler {
 
         ItemStack mainHand = player.getMainHandItem();
         ItemStack offHand = player.getOffhandItem();
-        if (!(mainHand.getItem() instanceof GenerateWandItem) && !(offHand.getItem() instanceof GenerateWandItem)) {
+        boolean hasCycleableWand = mainHand.getItem() instanceof GenerateWandItem
+                || offHand.getItem() instanceof GenerateWandItem
+                || mainHand.getItem() instanceof SelectWandItem
+                || offHand.getItem() instanceof SelectWandItem;
+        if (!hasCycleableWand) {
             return;
         }
 

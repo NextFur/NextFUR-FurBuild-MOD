@@ -6,16 +6,22 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -157,6 +163,250 @@ public class StyleManager {
         StyleDefinition updatedStyle = style.withModule(entry);
         saveStyleDefinition(server, updatedStyle);
         return entry;
+    }
+
+    public static StyleModuleEntry saveMappedModule(
+            ServerLevel level,
+            String styleName,
+            ModuleCategory category,
+            String moduleName,
+            double weight,
+            BoundingBox objectBox,
+            Optional<BoundingBox> parentPlaceBox
+    ) throws IOException {
+        Rotation normalizeRot = Rotation.NONE;
+        if (parentPlaceBox.isPresent() && category.isDirectionalFacade()) {
+            normalizeRot = detectNormalizationRotation(objectBox, parentPlaceBox.get());
+        }
+        if (normalizeRot == Rotation.NONE) {
+            return saveModule(level, styleName, category, moduleName, weight, objectBox);
+        }
+
+        MinecraftServer server = level.getServer();
+        String safeStyle = sanitizeName(styleName);
+        String safeModule = sanitizeName(moduleName);
+
+        StyleDefinition style = loadStyle(server, safeStyle)
+                .orElseGet(() -> {
+                    try {
+                        return createStyle(server, safeStyle, 5);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+        int sizeX = objectBox.getXSpan();
+        int sizeY = objectBox.getYSpan();
+        int sizeZ = objectBox.getZSpan();
+        int normSizeX = (normalizeRot == Rotation.CLOCKWISE_90 || normalizeRot == Rotation.COUNTERCLOCKWISE_90) ? sizeZ : sizeX;
+        int normSizeZ = (normalizeRot == Rotation.CLOCKWISE_90 || normalizeRot == Rotation.COUNTERCLOCKWISE_90) ? sizeX : sizeZ;
+
+        CompoundTag rootTag = buildRotatedStructureTag(level, objectBox, normalizeRot, sizeX, sizeY, sizeZ, normSizeX, normSizeZ);
+
+        String relativeFile = "modules/" + category.getSerializedName() + "/" + safeModule + ".nbt";
+        Path nbtPath = getStyleDir(server, safeStyle).resolve(relativeFile);
+        Files.createDirectories(nbtPath.getParent());
+        NbtIo.writeCompressed(rootTag, nbtPath);
+
+        StyleModuleEntry entry = new StyleModuleEntry(
+                safeModule,
+                category,
+                relativeFile,
+                weight,
+                new BlockPos(normSizeX, sizeY, normSizeZ)
+        );
+        StyleDefinition updatedStyle = style.withModule(entry);
+        saveStyleDefinition(server, updatedStyle);
+        return entry;
+    }
+
+    private static Rotation detectNormalizationRotation(BoundingBox objectBox, BoundingBox parentBox) {
+        double objCenterX = (objectBox.minX() + objectBox.maxX()) * 0.5;
+        double objCenterZ = (objectBox.minZ() + objectBox.maxZ()) * 0.5;
+
+        double distNorth = Math.abs(objCenterZ - parentBox.minZ());
+        double distSouth = Math.abs(parentBox.maxZ() - objCenterZ);
+        double distWest = Math.abs(objCenterX - parentBox.minX());
+        double distEast = Math.abs(parentBox.maxX() - objCenterX);
+
+        double min = Math.min(Math.min(distNorth, distSouth), Math.min(distWest, distEast));
+        if (min == distEast) {
+            return Rotation.COUNTERCLOCKWISE_90;
+        } else if (min == distSouth) {
+            return Rotation.CLOCKWISE_180;
+        } else if (min == distWest) {
+            return Rotation.CLOCKWISE_90;
+        }
+        return Rotation.NONE;
+    }
+
+    private static CompoundTag buildRotatedStructureTag(
+            ServerLevel level,
+            BoundingBox objectBox,
+            Rotation rot,
+            int sizeX, int sizeY, int sizeZ,
+            int normSizeX, int normSizeZ
+    ) {
+        List<BlockState> palette = new ArrayList<>();
+        ListTag blocksTag = new ListTag();
+
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+        for (int y = objectBox.minY(); y <= objectBox.maxY(); y++) {
+            for (int z = objectBox.minZ(); z <= objectBox.maxZ(); z++) {
+                for (int x = objectBox.minX(); x <= objectBox.maxX(); x++) {
+                    cursor.set(x, y, z);
+                    BlockState state = level.getBlockState(cursor);
+                    if (state.is(Blocks.STRUCTURE_VOID)) {
+                        continue;
+                    }
+                    int rx = x - objectBox.minX();
+                    int ry = y - objectBox.minY();
+                    int rz = z - objectBox.minZ();
+
+                    int nx;
+                    int nz;
+                    switch (rot) {
+                        case CLOCKWISE_90 -> {
+                            nx = (sizeZ - 1) - rz;
+                            nz = rx;
+                        }
+                        case CLOCKWISE_180 -> {
+                            nx = (sizeX - 1) - rx;
+                            nz = (sizeZ - 1) - rz;
+                        }
+                        case COUNTERCLOCKWISE_90 -> {
+                            nx = rz;
+                            nz = (sizeX - 1) - rx;
+                        }
+                        default -> {
+                            nx = rx;
+                            nz = rz;
+                        }
+                    }
+
+                    BlockState rotatedState = state.rotate(rot);
+                    int stateIdx = palette.indexOf(rotatedState);
+                    if (stateIdx < 0) {
+                        stateIdx = palette.size();
+                        palette.add(rotatedState);
+                    }
+
+                    CompoundTag blockTag = new CompoundTag();
+                    ListTag posList = new ListTag();
+                    posList.add(IntTag.valueOf(nx));
+                    posList.add(IntTag.valueOf(ry));
+                    posList.add(IntTag.valueOf(nz));
+                    blockTag.put("pos", posList);
+                    blockTag.putInt("state", stateIdx);
+
+                    BlockEntity be = level.getBlockEntity(cursor);
+                    if (be != null) {
+                        blockTag.put("nbt", be.saveWithFullMetadata(level.registryAccess()));
+                    }
+                    blocksTag.add(blockTag);
+                }
+            }
+        }
+
+        CompoundTag root = new CompoundTag();
+        ListTag sizeTag = new ListTag();
+        sizeTag.add(IntTag.valueOf(normSizeX));
+        sizeTag.add(IntTag.valueOf(sizeY));
+        sizeTag.add(IntTag.valueOf(normSizeZ));
+        root.put("size", sizeTag);
+
+        ListTag paletteTag = new ListTag();
+        for (BlockState state : palette) {
+            paletteTag.add(NbtUtils.writeBlockState(state));
+        }
+        root.put("palette", paletteTag);
+        root.put("blocks", blocksTag);
+        root.put("entities", new ListTag());
+        root.putInt("DataVersion", SharedConstants.getCurrentVersion().getDataVersion().getVersion());
+        return root;
+    }
+
+    public static List<String> feedPlaceIntoStyle(
+            ServerLevel level,
+            String styleName,
+            String placeType,
+            BoundingBox placeBox
+    ) throws IOException {
+        MinecraftServer server = level.getServer();
+        String safeStyle = sanitizeName(styleName);
+        String safePlaceType = placeType == null || placeType.isBlank() ? "building" : sanitizeName(placeType);
+
+        StyleDefinition style = loadStyle(server, safeStyle)
+                .orElseGet(() -> {
+                    try {
+                        return createStyle(server, safeStyle, 5);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+        Map<ResourceLocation, Integer> primaryCounts = new LinkedHashMap<>();
+        Map<ResourceLocation, Integer> floorCounts = new LinkedHashMap<>();
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+
+        for (int y = placeBox.minY(); y <= placeBox.maxY(); y++) {
+            for (int z = placeBox.minZ(); z <= placeBox.maxZ(); z++) {
+                for (int x = placeBox.minX(); x <= placeBox.maxX(); x++) {
+                    cursor.set(x, y, z);
+                    BlockState state = level.getBlockState(cursor);
+                    if (state.isAir() || state.is(Blocks.STRUCTURE_VOID)) {
+                        continue;
+                    }
+                    if (!state.isCollisionShapeFullBlock(level, cursor)) {
+                        continue;
+                    }
+                    ResourceLocation id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
+                    if (y == placeBox.minY()) {
+                        floorCounts.merge(id, 1, Integer::sum);
+                    } else {
+                        primaryCounts.merge(id, 1, Integer::sum);
+                    }
+                }
+            }
+        }
+
+        List<String> extractedPalettes = new ArrayList<>();
+        if (safePlaceType.equals("road") || safePlaceType.equals("path") || safePlaceType.equals("street")) {
+            Map<ResourceLocation, Integer> combined = new LinkedHashMap<>(floorCounts);
+            primaryCounts.forEach((k, v) -> combined.merge(k, v, Integer::sum));
+            if (!combined.isEmpty()) {
+                style = savePaletteObject(server, style, BlockPalette.fromCounts("path_blocks", combined));
+                extractedPalettes.add("path_blocks");
+            }
+        } else {
+            if (!primaryCounts.isEmpty()) {
+                style = savePaletteObject(server, style, BlockPalette.fromCounts("painting", primaryCounts));
+                extractedPalettes.add("painting");
+            }
+            if (!floorCounts.isEmpty()) {
+                style = savePaletteObject(server, style, BlockPalette.fromCounts("floor", floorCounts));
+                extractedPalettes.add("floor");
+            }
+        }
+        saveStyleDefinition(server, style);
+        return extractedPalettes;
+    }
+
+    private static StyleDefinition savePaletteObject(
+            MinecraftServer server,
+            StyleDefinition style,
+            BlockPalette palette
+    ) throws IOException {
+        String relativeFile = "palettes/" + palette.paletteType() + ".json";
+        Path palettePath = getStyleDir(server, style.styleName()).resolve(relativeFile);
+        Files.createDirectories(palettePath.getParent());
+
+        DataResult<JsonElement> encoded = BlockPalette.CODEC.encodeStart(JsonOps.INSTANCE, palette);
+        JsonElement json = encoded.getOrThrow(err -> new IOException("Failed to encode palette JSON: " + err));
+        try (Writer writer = Files.newBufferedWriter(palettePath, StandardCharsets.UTF_8)) {
+            GSON.toJson(json, writer);
+        }
+        return style.withPalette(palette.paletteType(), relativeFile);
     }
 
     public static Optional<StructureTemplate> loadModuleTemplate(
