@@ -158,6 +158,10 @@ var canonicalizeModDevPaths = tasks.register('canonicalizeModDevPaths') {
     }
 }
 
+var prepareRuns = tasks.matching {
+    it.name.startsWith('prepare') && it.name.endsWith('Run')
+}
+
 tasks.matching {
     (it.name.startsWith('prepare') && it.name.endsWith('Run')) ||
     (it.name.startsWith('write') && it.name.endsWith('LegacyClasspath'))
@@ -173,7 +177,7 @@ tasks.withType(JavaExec).configureEach {
 
 compileJava.finalizedBy syncToBinMain
 processResources.finalizedBy syncToBinMain
-classes.finalizedBy syncToBinMain
+classes.finalizedBy syncToBinMain, prepareRuns
 neoForge.ideSyncTask syncToBinMain
 neoForge.ideSyncTask canonicalizeModDevPaths
 

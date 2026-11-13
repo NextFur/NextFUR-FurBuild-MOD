@@ -12,5 +12,7 @@
 ### ✨ Mod
 * Crie pressets e builds de geração procedural
 
+## Veja mais informações em:
+* /DOCS.md
 
 ### Feito com 💖 pela [NextFUR](https://nextfur.net) para o 🦊 [FurSMP](https://fursmp.com)
