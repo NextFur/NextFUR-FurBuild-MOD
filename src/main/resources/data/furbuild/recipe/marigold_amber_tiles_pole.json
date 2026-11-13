@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:marigold_amber_tiles" } },
+  "pattern": ["#", "#"],
+  "result": { "id": "furbuild:marigold_amber_tiles_pole", "count": 6 }
+}

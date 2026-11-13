@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:chalk_limestone_stone" } },
+  "pattern": ["#  ", "## ", "###"],
+  "result": { "id": "furbuild:chalk_limestone_stone_stairs", "count": 4 }
+}

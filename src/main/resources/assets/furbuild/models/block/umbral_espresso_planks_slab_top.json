@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "furbuild:block/umbral_espresso_planks",
+    "side": "furbuild:block/umbral_espresso_planks",
+    "top": "furbuild:block/umbral_espresso_planks"
+  }
+}

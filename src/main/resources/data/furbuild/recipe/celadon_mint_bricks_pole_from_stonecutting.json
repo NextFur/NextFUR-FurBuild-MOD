@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:celadon_mint_bricks" },
+  "result": { "id": "furbuild:celadon_mint_bricks_pole", "count": 3 }
+}

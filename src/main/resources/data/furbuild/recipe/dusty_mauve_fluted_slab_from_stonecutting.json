@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:dusty_mauve_fluted" },
+  "result": { "id": "furbuild:dusty_mauve_fluted_slab", "count": 2 }
+}

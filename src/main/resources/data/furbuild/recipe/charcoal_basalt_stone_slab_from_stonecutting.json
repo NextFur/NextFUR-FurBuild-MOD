@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:charcoal_basalt_stone" },
+  "result": { "id": "furbuild:charcoal_basalt_stone_slab", "count": 2 }
+}

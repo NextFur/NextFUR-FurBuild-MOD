@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:chalk_limestone_bricks" },
+  "result": { "id": "furbuild:chalk_limestone_bricks_stairs", "count": 1 }
+}

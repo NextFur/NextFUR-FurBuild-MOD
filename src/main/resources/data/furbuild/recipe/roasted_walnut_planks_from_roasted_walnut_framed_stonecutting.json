@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:roasted_walnut_framed" },
+  "result": { "id": "furbuild:roasted_walnut_planks", "count": 1 }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "furbuild:block/bleached_linen_framed",
+    "side": "furbuild:block/bleached_linen_framed",
+    "top": "furbuild:block/bleached_linen_framed"
+  }
+}

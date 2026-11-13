@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/chalk_limestone_bricks_slab" },
+    "type=double": { "model": "furbuild:block/chalk_limestone_bricks" },
+    "type=top": { "model": "furbuild:block/chalk_limestone_bricks_slab_top" }
+  }
+}

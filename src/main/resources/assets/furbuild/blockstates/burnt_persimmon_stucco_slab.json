@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/burnt_persimmon_stucco_slab" },
+    "type=double": { "model": "furbuild:block/burnt_persimmon_stucco" },
+    "type=top": { "model": "furbuild:block/burnt_persimmon_stucco_slab_top" }
+  }
+}

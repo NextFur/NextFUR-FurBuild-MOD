@@ -96,7 +96,7 @@ public class FurBuildHelpCommand {
         sendLine(source, cmdEntry("/furstyle feed <style> [place]", "Feed a built place (Style Wand) and start object mapping", "/furstyle feed "));
         sendLine(source, cmdEntry("/furmap save [cat] [name]", "Map an object selected with Select Wand into the fed style", "/furmap save "));
         sendLine(source, cmdEntry("/furstyle addpalette <style> <type>", "Scan Cuboid selection into a weighted block palette", "/furstyle addpalette "));
-        sendLine(source, cmdEntry("/furstyle presets", "Generate/reset the 4 built-in testing style presets", "/furstyle presets"));
+        sendLine(source, cmdEntry("/furstyle presets", "Generate/reset the 6 built-in testing style presets", "/furstyle presets"));
         sendLine(source, cmdEntry("/generate <type> <style> [flags]", "Run one of the 5 procedural generators (~500 blocks/tick)", "/generate "));
         sendLine(source, cmdEntry("/ud", "Undo your last generation back to its previous blocks", "/ud"));
         sendLine(source, cmdEntry("/rd", "Redo your last undone generation", "/rd"));
@@ -141,7 +141,7 @@ public class FurBuildHelpCommand {
         sendLine(source, Component.literal("   • Palette Types: painting (wall weathering), path_blocks (roads/paths), floor (interior floors)").withStyle(ChatFormatting.AQUA));
         sendLine(source, cmdEntry("/furstyle list", "Lists all available styles in the world.", "/furstyle list"));
         sendLine(source, cmdEntry("/furstyle info <style>", "Displays module, palette & config info for a style.", "/furstyle info medieval"));
-        sendLine(source, cmdEntry("/furstyle presets", "Generates the 4 pre-built testing styles (medieval, cyberpunk, nordic, desert).", "/furstyle presets"));
+        sendLine(source, cmdEntry("/furstyle presets", "Generates the 6 pre-built testing styles (medieval, cyberpunk, nordic, desert, brutalist, upsetti).", "/furstyle presets"));
     }
 
     private static void sendGenerateHelp(CommandSourceStack source) {
@@ -194,7 +194,7 @@ public class FurBuildHelpCommand {
     private static void sendPresetsHelp(CommandSourceStack source) {
         sendLine(source, Component.literal("=== [FurBuild Help: Built-in Testing Style Presets] ===").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
         sendLine(source, buildTopicNavigationBar());
-        sendLine(source, Component.literal("FurBuild includes 4 complete preset styles pre-populated with all building, road, window ornament & prop modules + 3 palettes:").withStyle(ChatFormatting.GRAY));
+        sendLine(source, Component.literal("FurBuild includes 6 complete preset styles pre-populated with all building, road, window ornament & prop modules + 3 palettes:").withStyle(ChatFormatting.GRAY));
         sendLine(source, Component.literal(" • medieval").withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD)
                 .append(Component.literal(" : Stone bricks, mossy/cracked weathering, spruce timber frames, dark oak roofs, crypt dungeons.").withStyle(ChatFormatting.WHITE)));
         sendLine(source, Component.literal(" • cyberpunk").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD)
@@ -203,6 +203,10 @@ public class FurBuildHelpCommand {
                 .append(Component.literal(" : Spruce logs & planks, mossy cobblestone foundations, podzol/coarse dirt trails.").withStyle(ChatFormatting.WHITE)));
         sendLine(source, Component.literal(" • desert").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
                 .append(Component.literal(" : Cut & smooth sandstone, terracotta accents, acacia lattice windows, sandstone tombs.").withStyle(ChatFormatting.WHITE)));
+        sendLine(source, Component.literal(" • brutalist").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)
+                .append(Component.literal(" : Weathered Brutalist 6-step monochrome stone & brick gradient with slate poles.").withStyle(ChatFormatting.WHITE)));
+        sendLine(source, Component.literal(" • upsetti").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)
+                .append(Component.literal(" : Upsetti Hearth warm crimson-to-saffron stucco & carved tile gradient with terracotta poles.").withStyle(ChatFormatting.WHITE)));
 
         sendLine(source, Component.literal("Quick Test Commands (Click to paste):").withStyle(ChatFormatting.LIGHT_PURPLE));
         sendLine(source, cmdEntry("/generate building medieval -floors 3 -btype house -winfreq 2 -interior", "Generate a 3-story medieval house with interior & window ornaments", "/generate building medieval -floors 3 -btype house -winfreq 2 -interior"));

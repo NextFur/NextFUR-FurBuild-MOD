@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/cinnabar_rust_stucco_slab" },
+    "type=double": { "model": "furbuild:block/cinnabar_rust_stucco" },
+    "type=top": { "model": "furbuild:block/cinnabar_rust_stucco_slab_top" }
+  }
+}

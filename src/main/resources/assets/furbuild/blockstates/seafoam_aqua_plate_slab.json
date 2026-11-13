@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/seafoam_aqua_plate_slab" },
+    "type=double": { "model": "furbuild:block/seafoam_aqua_plate" },
+    "type=top": { "model": "furbuild:block/seafoam_aqua_plate_slab_top" }
+  }
+}

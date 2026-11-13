@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "furbuild:block/imperial_plum_fluted",
+    "side": "furbuild:block/imperial_plum_fluted",
+    "top": "furbuild:block/imperial_plum_fluted"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:abyssal_slate_bricks" },
+  "result": { "id": "furbuild:abyssal_slate_bricks_pole", "count": 3 }
+}

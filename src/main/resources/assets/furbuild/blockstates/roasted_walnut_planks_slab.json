@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/roasted_walnut_planks_slab" },
+    "type=double": { "model": "furbuild:block/roasted_walnut_planks" },
+    "type=top": { "model": "furbuild:block/roasted_walnut_planks_slab_top" }
+  }
+}

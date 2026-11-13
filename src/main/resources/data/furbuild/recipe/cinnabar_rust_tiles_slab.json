@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:cinnabar_rust_tiles" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:cinnabar_rust_tiles_slab", "count": 6 }
+}

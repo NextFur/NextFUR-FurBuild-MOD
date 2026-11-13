@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:aegean_teal_shingles" } },
+  "pattern": ["#  ", "## ", "###"],
+  "result": { "id": "furbuild:aegean_teal_shingles_stairs", "count": 4 }
+}

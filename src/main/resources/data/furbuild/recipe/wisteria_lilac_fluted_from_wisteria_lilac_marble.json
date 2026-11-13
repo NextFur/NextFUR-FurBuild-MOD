@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:wisteria_lilac_marble" } },
+  "pattern": ["##", "##"],
+  "result": { "id": "furbuild:wisteria_lilac_fluted", "count": 4 }
+}

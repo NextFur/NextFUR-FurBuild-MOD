@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:misty_sage_bricks" },
+  "result": { "id": "furbuild:misty_sage_bricks_pole", "count": 3 }
+}

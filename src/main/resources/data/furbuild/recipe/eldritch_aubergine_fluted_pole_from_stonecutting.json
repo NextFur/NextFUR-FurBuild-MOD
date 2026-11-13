@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:eldritch_aubergine_fluted" },
+  "result": { "id": "furbuild:eldritch_aubergine_fluted_pole", "count": 3 }
+}

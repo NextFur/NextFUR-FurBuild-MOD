@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:deep_lichen_bricks" },
+  "result": { "id": "furbuild:deep_lichen_bricks_stairs", "count": 1 }
+}

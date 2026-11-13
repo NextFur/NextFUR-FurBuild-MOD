@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "furbuild:block/crimson_ember_tiles",
+    "side": "furbuild:block/crimson_ember_tiles",
+    "top": "furbuild:block/crimson_ember_tiles"
+  }
+}

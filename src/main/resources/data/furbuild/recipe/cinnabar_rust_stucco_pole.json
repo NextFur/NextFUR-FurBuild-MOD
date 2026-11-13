@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:cinnabar_rust_stucco" } },
+  "pattern": ["#", "#"],
+  "result": { "id": "furbuild:cinnabar_rust_stucco_pole", "count": 6 }
+}

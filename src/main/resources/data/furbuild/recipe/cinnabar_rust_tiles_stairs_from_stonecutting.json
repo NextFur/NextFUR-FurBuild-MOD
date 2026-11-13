@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:cinnabar_rust_tiles" },
+  "result": { "id": "furbuild:cinnabar_rust_tiles_stairs", "count": 1 }
+}

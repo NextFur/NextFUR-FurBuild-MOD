@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        { "condition": "minecraft:survives_explosion" }
+      ],
+      "entries": [
+        { "type": "minecraft:item", "name": "furbuild:bleached_linen_planks_stairs" }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "furbuild:blocks/bleached_linen_planks_stairs"
+}

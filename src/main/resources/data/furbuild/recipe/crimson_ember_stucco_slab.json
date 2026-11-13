@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:crimson_ember_stucco" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:crimson_ember_stucco_slab", "count": 6 }
+}

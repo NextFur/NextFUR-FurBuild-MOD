@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "furbuild:block/marigold_amber_tiles",
+    "side": "furbuild:block/marigold_amber_tiles",
+    "top": "furbuild:block/marigold_amber_tiles"
+  }
+}

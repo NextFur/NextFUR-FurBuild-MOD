@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:aegean_teal_shingles" },
+  "result": { "id": "furbuild:aegean_teal_shingles_stairs", "count": 1 }
+}

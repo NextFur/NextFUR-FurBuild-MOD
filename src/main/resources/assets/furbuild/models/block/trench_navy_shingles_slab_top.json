@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "furbuild:block/trench_navy_shingles",
+    "side": "furbuild:block/trench_navy_shingles",
+    "top": "furbuild:block/trench_navy_shingles"
+  }
+}

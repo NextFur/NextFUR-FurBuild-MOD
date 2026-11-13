@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/patina_verdigris_plate_slab" },
+    "type=double": { "model": "furbuild:block/patina_verdigris_plate" },
+    "type=top": { "model": "furbuild:block/patina_verdigris_plate_slab_top" }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "furbuild:block/saffron_ochre_stucco",
+    "side": "furbuild:block/saffron_ochre_stucco",
+    "top": "furbuild:block/saffron_ochre_stucco"
+  }
+}

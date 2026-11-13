@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        { "condition": "minecraft:survives_explosion" }
+      ],
+      "entries": [
+        { "type": "minecraft:item", "name": "furbuild:ironwood_slate_stone_stairs" }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "furbuild:blocks/ironwood_slate_stone_stairs"
+}

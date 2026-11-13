@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/charcoal_basalt_stone_slab" },
+    "type=double": { "model": "furbuild:block/charcoal_basalt_stone" },
+    "type=top": { "model": "furbuild:block/charcoal_basalt_stone_slab_top" }
+  }
+}

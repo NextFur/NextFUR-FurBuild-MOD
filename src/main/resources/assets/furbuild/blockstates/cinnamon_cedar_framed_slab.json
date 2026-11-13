@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/cinnamon_cedar_framed_slab" },
+    "type=double": { "model": "furbuild:block/cinnamon_cedar_framed" },
+    "type=top": { "model": "furbuild:block/cinnamon_cedar_framed_slab_top" }
+  }
+}

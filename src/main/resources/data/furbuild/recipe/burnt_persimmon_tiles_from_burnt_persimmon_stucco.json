@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:burnt_persimmon_stucco" } },
+  "pattern": ["##", "##"],
+  "result": { "id": "furbuild:burnt_persimmon_tiles", "count": 4 }
+}

@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:ironwood_slate_bricks" },
+  "result": { "id": "furbuild:ironwood_slate_stone", "count": 1 }
+}

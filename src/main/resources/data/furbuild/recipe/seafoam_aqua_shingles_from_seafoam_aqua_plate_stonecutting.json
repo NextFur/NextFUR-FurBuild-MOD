@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:seafoam_aqua_plate" },
+  "result": { "id": "furbuild:seafoam_aqua_shingles", "count": 1 }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:glacial_mist_plate" } },
+  "pattern": ["##", "##"],
+  "result": { "id": "furbuild:glacial_mist_shingles", "count": 4 }
+}

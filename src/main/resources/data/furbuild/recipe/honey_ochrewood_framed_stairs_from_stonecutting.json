@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:honey_ochrewood_framed" },
+  "result": { "id": "furbuild:honey_ochrewood_framed_stairs", "count": 1 }
+}

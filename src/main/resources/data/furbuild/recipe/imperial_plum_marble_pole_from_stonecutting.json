@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:imperial_plum_marble" },
+  "result": { "id": "furbuild:imperial_plum_marble_pole", "count": 3 }
+}

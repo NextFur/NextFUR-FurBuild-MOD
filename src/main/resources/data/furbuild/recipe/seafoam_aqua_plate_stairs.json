@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:seafoam_aqua_plate" } },
+  "pattern": ["#  ", "## ", "###"],
+  "result": { "id": "furbuild:seafoam_aqua_plate_stairs", "count": 4 }
+}

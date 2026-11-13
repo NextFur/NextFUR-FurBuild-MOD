@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=x": { "model": "furbuild:block/eldritch_aubergine_marble_pole", "x": 90, "y": 90 },
+    "axis=y": { "model": "furbuild:block/eldritch_aubergine_marble_pole" },
+    "axis=z": { "model": "furbuild:block/eldritch_aubergine_marble_pole", "x": 90 }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:charcoal_basalt_bricks" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:charcoal_basalt_bricks_slab", "count": 6 }
+}

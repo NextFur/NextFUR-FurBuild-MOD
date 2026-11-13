@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:ironwood_slate_stone" } },
+  "pattern": ["#", "#"],
+  "result": { "id": "furbuild:ironwood_slate_stone_pole", "count": 6 }
+}

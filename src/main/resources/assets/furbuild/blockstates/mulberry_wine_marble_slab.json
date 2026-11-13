@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/mulberry_wine_marble_slab" },
+    "type=double": { "model": "furbuild:block/mulberry_wine_marble" },
+    "type=top": { "model": "furbuild:block/mulberry_wine_marble_slab_top" }
+  }
+}

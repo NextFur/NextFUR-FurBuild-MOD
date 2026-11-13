@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:wisteria_lilac_marble" },
+  "result": { "id": "furbuild:wisteria_lilac_marble_stairs", "count": 1 }
+}

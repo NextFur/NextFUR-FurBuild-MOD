@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:oxblood_maroon_stucco" },
+  "result": { "id": "furbuild:oxblood_maroon_stucco_pole", "count": 3 }
+}

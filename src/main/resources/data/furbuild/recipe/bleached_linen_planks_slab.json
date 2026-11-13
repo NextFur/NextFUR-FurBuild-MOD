@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:bleached_linen_planks" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:bleached_linen_planks_slab", "count": 6 }
+}

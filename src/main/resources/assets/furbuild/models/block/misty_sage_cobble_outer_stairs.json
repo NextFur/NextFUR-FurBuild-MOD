@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "furbuild:block/misty_sage_cobble",
+    "side": "furbuild:block/misty_sage_cobble",
+    "top": "furbuild:block/misty_sage_cobble"
+  }
+}

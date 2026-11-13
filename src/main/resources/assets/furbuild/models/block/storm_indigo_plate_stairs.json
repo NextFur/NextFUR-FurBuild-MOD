@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "furbuild:block/storm_indigo_plate",
+    "side": "furbuild:block/storm_indigo_plate",
+    "top": "furbuild:block/storm_indigo_plate"
+  }
+}

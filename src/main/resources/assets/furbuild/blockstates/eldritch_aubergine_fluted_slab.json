@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/eldritch_aubergine_fluted_slab" },
+    "type=double": { "model": "furbuild:block/eldritch_aubergine_fluted" },
+    "type=top": { "model": "furbuild:block/eldritch_aubergine_fluted_slab_top" }
+  }
+}

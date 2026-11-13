@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:shadow_pine_bricks" },
+  "result": { "id": "furbuild:shadow_pine_bricks_slab", "count": 2 }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "furbuild:block/aegean_teal_plate",
+    "side": "furbuild:block/aegean_teal_plate",
+    "top": "furbuild:block/aegean_teal_plate"
+  }
+}

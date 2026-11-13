@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=x": { "model": "furbuild:block/wisteria_lilac_fluted_pole", "x": 90, "y": 90 },
+    "axis=y": { "model": "furbuild:block/wisteria_lilac_fluted_pole" },
+    "axis=z": { "model": "furbuild:block/wisteria_lilac_fluted_pole", "x": 90 }
+  }
+}

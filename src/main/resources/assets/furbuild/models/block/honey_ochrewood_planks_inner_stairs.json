@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "furbuild:block/honey_ochrewood_planks",
+    "side": "furbuild:block/honey_ochrewood_planks",
+    "top": "furbuild:block/honey_ochrewood_planks"
+  }
+}

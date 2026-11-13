@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:abyssal_slate_stone" } },
+  "pattern": ["##", "##"],
+  "result": { "id": "furbuild:abyssal_slate_bricks", "count": 4 }
+}

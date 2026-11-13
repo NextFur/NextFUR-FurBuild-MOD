@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/saffron_ochre_stucco_slab" },
+    "type=double": { "model": "furbuild:block/saffron_ochre_stucco" },
+    "type=top": { "model": "furbuild:block/saffron_ochre_stucco_slab_top" }
+  }
+}

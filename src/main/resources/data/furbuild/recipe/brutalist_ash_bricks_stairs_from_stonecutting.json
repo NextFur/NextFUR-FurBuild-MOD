@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:brutalist_ash_bricks" },
+  "result": { "id": "furbuild:brutalist_ash_bricks_stairs", "count": 1 }
+}

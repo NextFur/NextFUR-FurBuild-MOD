@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:deep_lichen_cobble" },
+  "result": { "id": "furbuild:deep_lichen_cobble_slab", "count": 2 }
+}

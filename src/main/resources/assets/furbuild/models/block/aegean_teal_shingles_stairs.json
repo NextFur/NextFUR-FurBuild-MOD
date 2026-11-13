@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "furbuild:block/aegean_teal_shingles",
+    "side": "furbuild:block/aegean_teal_shingles",
+    "top": "furbuild:block/aegean_teal_shingles"
+  }
+}

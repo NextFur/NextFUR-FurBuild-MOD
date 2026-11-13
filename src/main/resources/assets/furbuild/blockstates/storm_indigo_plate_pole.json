@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=x": { "model": "furbuild:block/storm_indigo_plate_pole", "x": 90, "y": 90 },
+    "axis=y": { "model": "furbuild:block/storm_indigo_plate_pole" },
+    "axis=z": { "model": "furbuild:block/storm_indigo_plate_pole", "x": 90 }
+  }
+}

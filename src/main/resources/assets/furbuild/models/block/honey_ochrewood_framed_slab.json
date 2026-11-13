@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "furbuild:block/honey_ochrewood_framed",
+    "side": "furbuild:block/honey_ochrewood_framed",
+    "top": "furbuild:block/honey_ochrewood_framed"
+  }
+}

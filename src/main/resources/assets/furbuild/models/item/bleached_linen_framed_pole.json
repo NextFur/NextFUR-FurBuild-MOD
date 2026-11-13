@@ -1,0 +1,6 @@
+{
+  "parent": "furbuild:item/pole_inventory",
+  "textures": {
+    "texture": "furbuild:block/bleached_linen_framed"
+  }
+}

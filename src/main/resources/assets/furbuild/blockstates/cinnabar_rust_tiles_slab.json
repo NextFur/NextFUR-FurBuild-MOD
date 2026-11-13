@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/cinnabar_rust_tiles_slab" },
+    "type=double": { "model": "furbuild:block/cinnabar_rust_tiles" },
+    "type=top": { "model": "furbuild:block/cinnabar_rust_tiles_slab_top" }
+  }
+}

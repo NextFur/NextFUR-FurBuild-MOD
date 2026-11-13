@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:eldritch_aubergine_marble" } },
+  "pattern": ["#  ", "## ", "###"],
+  "result": { "id": "furbuild:eldritch_aubergine_marble_stairs", "count": 4 }
+}

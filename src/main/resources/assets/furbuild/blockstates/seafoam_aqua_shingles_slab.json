@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/seafoam_aqua_shingles_slab" },
+    "type=double": { "model": "furbuild:block/seafoam_aqua_shingles" },
+    "type=top": { "model": "furbuild:block/seafoam_aqua_shingles_slab_top" }
+  }
+}

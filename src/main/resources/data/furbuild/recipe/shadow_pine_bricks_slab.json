@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:shadow_pine_bricks" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:shadow_pine_bricks_slab", "count": 6 }
+}

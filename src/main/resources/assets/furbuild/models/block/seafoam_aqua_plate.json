@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "furbuild:block/seafoam_aqua_plate"
+  }
+}

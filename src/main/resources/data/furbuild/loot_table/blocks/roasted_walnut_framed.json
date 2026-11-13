@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        { "condition": "minecraft:survives_explosion" }
+      ],
+      "entries": [
+        { "type": "minecraft:item", "name": "furbuild:roasted_walnut_framed" }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "furbuild:blocks/roasted_walnut_framed"
+}

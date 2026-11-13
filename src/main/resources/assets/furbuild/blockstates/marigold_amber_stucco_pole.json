@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=x": { "model": "furbuild:block/marigold_amber_stucco_pole", "x": 90, "y": 90 },
+    "axis=y": { "model": "furbuild:block/marigold_amber_stucco_pole" },
+    "axis=z": { "model": "furbuild:block/marigold_amber_stucco_pole", "x": 90 }
+  }
+}

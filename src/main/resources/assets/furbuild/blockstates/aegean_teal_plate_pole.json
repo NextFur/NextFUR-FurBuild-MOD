@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=x": { "model": "furbuild:block/aegean_teal_plate_pole", "x": 90, "y": 90 },
+    "axis=y": { "model": "furbuild:block/aegean_teal_plate_pole" },
+    "axis=z": { "model": "furbuild:block/aegean_teal_plate_pole", "x": 90 }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=x": { "model": "furbuild:block/heather_blush_fluted_pole", "x": 90, "y": 90 },
+    "axis=y": { "model": "furbuild:block/heather_blush_fluted_pole" },
+    "axis=z": { "model": "furbuild:block/heather_blush_fluted_pole", "x": 90 }
+  }
+}

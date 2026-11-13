@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=x": { "model": "furbuild:block/pebble_greige_bricks_pole", "x": 90, "y": 90 },
+    "axis=y": { "model": "furbuild:block/pebble_greige_bricks_pole" },
+    "axis=z": { "model": "furbuild:block/pebble_greige_bricks_pole", "x": 90 }
+  }
+}

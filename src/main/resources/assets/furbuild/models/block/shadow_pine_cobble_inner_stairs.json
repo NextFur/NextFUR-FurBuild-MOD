@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "furbuild:block/shadow_pine_cobble",
+    "side": "furbuild:block/shadow_pine_cobble",
+    "top": "furbuild:block/shadow_pine_cobble"
+  }
+}

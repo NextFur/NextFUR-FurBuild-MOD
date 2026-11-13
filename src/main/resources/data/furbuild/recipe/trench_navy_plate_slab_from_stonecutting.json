@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:trench_navy_plate" },
+  "result": { "id": "furbuild:trench_navy_plate_slab", "count": 2 }
+}

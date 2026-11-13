@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "furbuild:block/glacial_mist_shingles",
+    "side": "furbuild:block/glacial_mist_shingles",
+    "top": "furbuild:block/glacial_mist_shingles"
+  }
+}

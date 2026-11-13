@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:dusty_mauve_marble" },
+  "result": { "id": "furbuild:dusty_mauve_marble_pole", "count": 3 }
+}

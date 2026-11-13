@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "furbuild:block/bleached_linen_planks",
+    "side": "furbuild:block/bleached_linen_planks",
+    "top": "furbuild:block/bleached_linen_planks"
+  }
+}

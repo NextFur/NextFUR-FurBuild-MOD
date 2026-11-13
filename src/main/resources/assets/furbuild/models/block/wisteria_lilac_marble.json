@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "furbuild:block/wisteria_lilac_marble"
+  }
+}

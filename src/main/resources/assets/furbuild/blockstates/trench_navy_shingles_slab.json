@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/trench_navy_shingles_slab" },
+    "type=double": { "model": "furbuild:block/trench_navy_shingles" },
+    "type=top": { "model": "furbuild:block/trench_navy_shingles_slab_top" }
+  }
+}

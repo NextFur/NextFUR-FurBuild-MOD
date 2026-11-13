@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:heather_blush_marble" },
+  "result": { "id": "furbuild:heather_blush_marble_slab", "count": 2 }
+}

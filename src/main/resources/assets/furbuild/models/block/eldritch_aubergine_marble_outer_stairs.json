@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "furbuild:block/eldritch_aubergine_marble",
+    "side": "furbuild:block/eldritch_aubergine_marble",
+    "top": "furbuild:block/eldritch_aubergine_marble"
+  }
+}

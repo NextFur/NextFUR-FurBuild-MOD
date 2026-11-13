@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:driftwood_taupe_framed" } },
+  "pattern": ["#", "#"],
+  "result": { "id": "furbuild:driftwood_taupe_framed_pole", "count": 6 }
+}

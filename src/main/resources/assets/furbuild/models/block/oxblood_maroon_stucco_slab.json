@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "furbuild:block/oxblood_maroon_stucco",
+    "side": "furbuild:block/oxblood_maroon_stucco",
+    "top": "furbuild:block/oxblood_maroon_stucco"
+  }
+}

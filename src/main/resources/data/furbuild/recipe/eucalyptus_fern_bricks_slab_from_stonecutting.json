@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:eucalyptus_fern_bricks" },
+  "result": { "id": "furbuild:eucalyptus_fern_bricks_slab", "count": 2 }
+}

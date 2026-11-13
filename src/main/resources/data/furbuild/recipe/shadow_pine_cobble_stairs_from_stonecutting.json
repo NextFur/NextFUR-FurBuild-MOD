@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:shadow_pine_cobble" },
+  "result": { "id": "furbuild:shadow_pine_cobble_stairs", "count": 1 }
+}

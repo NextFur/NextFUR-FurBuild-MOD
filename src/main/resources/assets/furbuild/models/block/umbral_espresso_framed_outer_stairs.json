@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "furbuild:block/umbral_espresso_framed",
+    "side": "furbuild:block/umbral_espresso_framed",
+    "top": "furbuild:block/umbral_espresso_framed"
+  }
+}

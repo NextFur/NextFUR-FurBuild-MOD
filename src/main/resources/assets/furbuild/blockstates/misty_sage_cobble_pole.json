@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=x": { "model": "furbuild:block/misty_sage_cobble_pole", "x": 90, "y": 90 },
+    "axis=y": { "model": "furbuild:block/misty_sage_cobble_pole" },
+    "axis=z": { "model": "furbuild:block/misty_sage_cobble_pole", "x": 90 }
+  }
+}

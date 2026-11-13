@@ -1,0 +1,6 @@
+{
+  "parent": "furbuild:item/pole_inventory",
+  "textures": {
+    "texture": "furbuild:block/trench_navy_plate"
+  }
+}

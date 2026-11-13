@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=x": { "model": "furbuild:block/glacial_mist_shingles_pole", "x": 90, "y": 90 },
+    "axis=y": { "model": "furbuild:block/glacial_mist_shingles_pole" },
+    "axis=z": { "model": "furbuild:block/glacial_mist_shingles_pole", "x": 90 }
+  }
+}

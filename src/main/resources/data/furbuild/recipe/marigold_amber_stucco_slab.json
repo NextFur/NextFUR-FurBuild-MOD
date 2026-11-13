@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:marigold_amber_stucco" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:marigold_amber_stucco_slab", "count": 6 }
+}

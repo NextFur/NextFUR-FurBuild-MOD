@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "furbuild:block/wisteria_lilac_marble",
+    "side": "furbuild:block/wisteria_lilac_marble",
+    "top": "furbuild:block/wisteria_lilac_marble"
+  }
+}

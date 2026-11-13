@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:heather_blush_fluted" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:heather_blush_fluted_slab", "count": 6 }
+}

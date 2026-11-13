@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/misty_sage_cobble_slab" },
+    "type=double": { "model": "furbuild:block/misty_sage_cobble" },
+    "type=top": { "model": "furbuild:block/misty_sage_cobble_slab_top" }
+  }
+}

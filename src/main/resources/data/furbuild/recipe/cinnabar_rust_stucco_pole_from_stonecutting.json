@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:cinnabar_rust_stucco" },
+  "result": { "id": "furbuild:cinnabar_rust_stucco_pole", "count": 3 }
+}

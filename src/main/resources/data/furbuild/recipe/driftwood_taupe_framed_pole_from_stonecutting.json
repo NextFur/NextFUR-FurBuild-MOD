@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:driftwood_taupe_framed" },
+  "result": { "id": "furbuild:driftwood_taupe_framed_pole", "count": 3 }
+}

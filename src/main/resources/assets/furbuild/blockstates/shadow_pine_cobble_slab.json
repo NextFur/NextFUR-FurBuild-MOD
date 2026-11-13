@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/shadow_pine_cobble_slab" },
+    "type=double": { "model": "furbuild:block/shadow_pine_cobble" },
+    "type=top": { "model": "furbuild:block/shadow_pine_cobble_slab_top" }
+  }
+}

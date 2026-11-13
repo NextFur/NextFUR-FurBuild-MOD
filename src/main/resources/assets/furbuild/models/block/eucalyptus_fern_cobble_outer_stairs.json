@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "furbuild:block/eucalyptus_fern_cobble",
+    "side": "furbuild:block/eucalyptus_fern_cobble",
+    "top": "furbuild:block/eucalyptus_fern_cobble"
+  }
+}

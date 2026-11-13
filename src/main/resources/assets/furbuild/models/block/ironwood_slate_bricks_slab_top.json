@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "furbuild:block/ironwood_slate_bricks",
+    "side": "furbuild:block/ironwood_slate_bricks",
+    "top": "furbuild:block/ironwood_slate_bricks"
+  }
+}

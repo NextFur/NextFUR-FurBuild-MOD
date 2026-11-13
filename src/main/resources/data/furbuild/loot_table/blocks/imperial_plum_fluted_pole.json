@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        { "condition": "minecraft:survives_explosion" }
+      ],
+      "entries": [
+        { "type": "minecraft:item", "name": "furbuild:imperial_plum_fluted_pole" }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "furbuild:blocks/imperial_plum_fluted_pole"
+}

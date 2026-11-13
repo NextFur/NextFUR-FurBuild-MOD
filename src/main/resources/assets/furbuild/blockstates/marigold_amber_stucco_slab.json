@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/marigold_amber_stucco_slab" },
+    "type=double": { "model": "furbuild:block/marigold_amber_stucco" },
+    "type=top": { "model": "furbuild:block/marigold_amber_stucco_slab_top" }
+  }
+}

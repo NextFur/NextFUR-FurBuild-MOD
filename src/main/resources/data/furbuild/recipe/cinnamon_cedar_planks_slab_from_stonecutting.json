@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:cinnamon_cedar_planks" },
+  "result": { "id": "furbuild:cinnamon_cedar_planks_slab", "count": 2 }
+}

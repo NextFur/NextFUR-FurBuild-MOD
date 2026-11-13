@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:driftwood_taupe_planks" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:driftwood_taupe_planks_slab", "count": 6 }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:storm_indigo_plate" } },
+  "pattern": ["#", "#"],
+  "result": { "id": "furbuild:storm_indigo_plate_pole", "count": 6 }
+}

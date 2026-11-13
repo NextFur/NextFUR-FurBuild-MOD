@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:heather_blush_marble" } },
+  "pattern": ["#  ", "## ", "###"],
+  "result": { "id": "furbuild:heather_blush_marble_stairs", "count": 4 }
+}

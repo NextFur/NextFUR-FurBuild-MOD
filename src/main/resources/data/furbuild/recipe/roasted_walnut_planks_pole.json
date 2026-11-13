@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:roasted_walnut_planks" } },
+  "pattern": ["#", "#"],
+  "result": { "id": "furbuild:roasted_walnut_planks_pole", "count": 6 }
+}

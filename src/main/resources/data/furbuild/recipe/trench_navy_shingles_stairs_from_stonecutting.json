@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:trench_navy_shingles" },
+  "result": { "id": "furbuild:trench_navy_shingles_stairs", "count": 1 }
+}

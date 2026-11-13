@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:umbral_espresso_framed" } },
+  "pattern": ["#  ", "## ", "###"],
+  "result": { "id": "furbuild:umbral_espresso_framed_stairs", "count": 4 }
+}

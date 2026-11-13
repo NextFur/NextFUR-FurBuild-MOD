@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/abyssal_slate_stone_slab" },
+    "type=double": { "model": "furbuild:block/abyssal_slate_stone" },
+    "type=top": { "model": "furbuild:block/abyssal_slate_stone_slab_top" }
+  }
+}

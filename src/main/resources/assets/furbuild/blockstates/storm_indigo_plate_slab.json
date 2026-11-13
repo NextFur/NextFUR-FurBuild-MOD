@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/storm_indigo_plate_slab" },
+    "type=double": { "model": "furbuild:block/storm_indigo_plate" },
+    "type=top": { "model": "furbuild:block/storm_indigo_plate_slab_top" }
+  }
+}

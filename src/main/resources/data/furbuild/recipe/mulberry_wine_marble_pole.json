@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:mulberry_wine_marble" } },
+  "pattern": ["#", "#"],
+  "result": { "id": "furbuild:mulberry_wine_marble_pole", "count": 6 }
+}

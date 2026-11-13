@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:olive_cypress_cobble" } },
+  "pattern": ["##", "##"],
+  "result": { "id": "furbuild:olive_cypress_bricks", "count": 4 }
+}

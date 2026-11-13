@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:marigold_amber_stucco" },
+  "result": { "id": "furbuild:marigold_amber_stucco_slab", "count": 2 }
+}

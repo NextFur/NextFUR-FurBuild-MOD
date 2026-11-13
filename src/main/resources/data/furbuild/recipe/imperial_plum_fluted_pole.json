@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:imperial_plum_fluted" } },
+  "pattern": ["#", "#"],
+  "result": { "id": "furbuild:imperial_plum_fluted_pole", "count": 6 }
+}

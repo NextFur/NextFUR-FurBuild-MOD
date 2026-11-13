@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:imperial_plum_marble" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:imperial_plum_marble_slab", "count": 6 }
+}

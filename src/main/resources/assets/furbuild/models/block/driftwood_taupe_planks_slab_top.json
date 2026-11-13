@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "furbuild:block/driftwood_taupe_planks",
+    "side": "furbuild:block/driftwood_taupe_planks",
+    "top": "furbuild:block/driftwood_taupe_planks"
+  }
+}

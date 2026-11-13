@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "furbuild:block/seafoam_aqua_shingles",
+    "side": "furbuild:block/seafoam_aqua_shingles",
+    "top": "furbuild:block/seafoam_aqua_shingles"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:patina_verdigris_plate" },
+  "result": { "id": "furbuild:patina_verdigris_shingles", "count": 1 }
+}

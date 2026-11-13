@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/eucalyptus_fern_bricks_slab" },
+    "type=double": { "model": "furbuild:block/eucalyptus_fern_bricks" },
+    "type=top": { "model": "furbuild:block/eucalyptus_fern_bricks_slab_top" }
+  }
+}

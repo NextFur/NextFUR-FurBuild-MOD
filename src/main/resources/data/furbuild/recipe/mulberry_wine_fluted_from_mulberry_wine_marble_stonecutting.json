@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:mulberry_wine_marble" },
+  "result": { "id": "furbuild:mulberry_wine_fluted", "count": 1 }
+}

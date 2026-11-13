@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "furbuild:block/abyssal_slate_bricks"
+  }
+}

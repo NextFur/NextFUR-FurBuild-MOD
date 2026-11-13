@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:burnt_persimmon_stucco" },
+  "result": { "id": "furbuild:burnt_persimmon_stucco_slab", "count": 2 }
+}

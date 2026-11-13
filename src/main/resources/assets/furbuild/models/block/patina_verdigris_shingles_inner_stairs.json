@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "furbuild:block/patina_verdigris_shingles",
+    "side": "furbuild:block/patina_verdigris_shingles",
+    "top": "furbuild:block/patina_verdigris_shingles"
+  }
+}

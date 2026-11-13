@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:storm_indigo_plate" },
+  "result": { "id": "furbuild:storm_indigo_shingles", "count": 1 }
+}

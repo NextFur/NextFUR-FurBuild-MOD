@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/misty_sage_bricks_slab" },
+    "type=double": { "model": "furbuild:block/misty_sage_bricks" },
+    "type=top": { "model": "furbuild:block/misty_sage_bricks_slab_top" }
+  }
+}

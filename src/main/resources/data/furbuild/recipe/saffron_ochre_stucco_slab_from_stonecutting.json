@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:saffron_ochre_stucco" },
+  "result": { "id": "furbuild:saffron_ochre_stucco_slab", "count": 2 }
+}

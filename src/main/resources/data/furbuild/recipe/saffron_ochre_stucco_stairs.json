@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:saffron_ochre_stucco" } },
+  "pattern": ["#  ", "## ", "###"],
+  "result": { "id": "furbuild:saffron_ochre_stucco_stairs", "count": 4 }
+}

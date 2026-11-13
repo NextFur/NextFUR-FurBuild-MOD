@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:glacial_mist_shingles" },
+  "result": { "id": "furbuild:glacial_mist_shingles_pole", "count": 3 }
+}

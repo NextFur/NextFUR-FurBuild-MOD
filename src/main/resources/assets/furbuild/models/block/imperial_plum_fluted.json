@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "furbuild:block/imperial_plum_fluted"
+  }
+}

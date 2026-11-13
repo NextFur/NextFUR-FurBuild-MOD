@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:deep_lichen_bricks" } },
+  "pattern": ["##", "##"],
+  "result": { "id": "furbuild:deep_lichen_cobble", "count": 4 }
+}

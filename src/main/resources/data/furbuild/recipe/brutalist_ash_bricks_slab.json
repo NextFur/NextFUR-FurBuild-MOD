@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:brutalist_ash_bricks" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:brutalist_ash_bricks_slab", "count": 6 }
+}

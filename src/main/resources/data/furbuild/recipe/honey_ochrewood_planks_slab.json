@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:honey_ochrewood_planks" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:honey_ochrewood_planks_slab", "count": 6 }
+}

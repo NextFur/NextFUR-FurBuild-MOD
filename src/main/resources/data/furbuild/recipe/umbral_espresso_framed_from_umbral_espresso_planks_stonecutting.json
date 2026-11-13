@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:umbral_espresso_planks" },
+  "result": { "id": "furbuild:umbral_espresso_framed", "count": 1 }
+}

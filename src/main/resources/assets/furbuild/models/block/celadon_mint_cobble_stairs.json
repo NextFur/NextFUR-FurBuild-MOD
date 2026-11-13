@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "furbuild:block/celadon_mint_cobble",
+    "side": "furbuild:block/celadon_mint_cobble",
+    "top": "furbuild:block/celadon_mint_cobble"
+  }
+}

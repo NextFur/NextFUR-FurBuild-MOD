@@ -90,8 +90,8 @@ Abra o inventário do Criativo e acesse a aba **NextFUR FurBuild**, ou receba os
 /give @s furbuild:select_wand
 ```
 
-### Explorando os 4 Estilos Predefinidos (Presets)
-Quando um mundo ou servidor inicia, o FurBuild instala automaticamente **4 presets arquitetônicos completos** em `<world>/furbuild/styles/`. Você também pode reinstalá-los ou restaurá-los a qualquer momento com `/furstyle presets` (ou `/furbuild presets true`).
+### Explorando os 6 Estilos Predefinidos (Presets)
+Quando um mundo ou servidor inicia, o FurBuild instala automaticamente **6 presets arquitetônicos completos** em `<world>/furbuild/styles/`. Você também pode reinstalá-los ou restaurá-los a qualquer momento com `/furstyle presets` (ou `/furbuild presets true`).
 
 | Preset | `window_frequency` Padrão | Paleta `painting` | Paleta `path_blocks` | Paleta `floor` | Detalhes Característicos |
 | :--- | :---: | :--- | :--- | :--- | :--- |
@@ -99,6 +99,22 @@ Quando um mundo ou servidor inicia, o FurBuild instala automaticamente **4 prese
 | **`cyberpunk`** | `1` | `polished_deepslate`, `deepslate_tiles`, `black_concrete`, `cyan_terracotta` | `black_concrete`, `gray_concrete`, `polished_basalt` | `smooth_stone`, `polished_deepslate` | Janelas duplas de vidro ciano, unidades de ar-condicionado com antena, letreiros de neon verticais, HVAC e torres de rádio no topo |
 | **`nordic`** | `2` | `spruce_planks`, `stripped_spruce_log`, `cobblestone`, `mossy_cobblestone` | `coarse_dirt`, `podzol`, `gravel`, `cobblestone` | `spruce_planks`, `dark_oak_planks` | Janelas com barras de ferro, telhados de pinheiro, floreiras com venezianas, barris e lanternas rústicas |
 | **`desert`** | `2` | `cut_sandstone`, `smooth_sandstone`, `sandstone`, `terracotta` | `sandstone`, `smooth_sandstone`, `orange_terracotta` | `smooth_sandstone`, `birch_planks` | Telhados planos de adobe com parapeito e pontas de vigas de madeira, muxarabis salientes (*mashrabiya*), toldos de terracota |
+| **`brutalist`** | `2` | `abyssal_slate_stone`, `charcoal_basalt_stone`, `ironwood_slate_stone`, `brutalist_ash_stone`, `pebble_greige_bricks`, `chalk_limestone_stone` | `charcoal_basalt_bricks`, `ironwood_slate_bricks`, `pebble_greige_stone` | `brutalist_ash_bricks`, `chalk_limestone_bricks` | Gradiente monocromático brutalista de 6 tons com pedras desgastadas, tijolos e postes (`PoleBlock`) de ardósia |
+| **`upsetti`** | `2` | `oxblood_maroon_stucco`, `crimson_ember_stucco`, `cinnabar_rust_tiles`, `burnt_persimmon_tiles`, `marigold_amber_stucco`, `saffron_ochre_stucco` | `oxblood_maroon_tiles`, `crimson_ember_tiles`, `cinnabar_rust_stucco` | `burnt_persimmon_stucco`, `saffron_ochre_tiles` | Gradiente quente de bordô a açafrão com estuque e ladrilhos entalhados em alto contraste |
+
+### Blocos de Paleta e Contraste (36 Cores / 288 Blocos)
+O FurBuild adiciona **36 cores exclusivas** (ausentes no Minecraft vanilla) organizadas em **6 famílias de gradiente de 6 etapas** na aba **FurBuild: Paletas de Construção**:
+
+| Família de Paleta | Variedade A | Variedade B | Cores (Etapas 1 → 6, Escuro → Claro) |
+| :--- | :--- | :--- | :--- |
+| **Weathered Brutalist** (`brutalist`) | `stone` | `bricks` | `abyssal_slate`, `charcoal_basalt`, `ironwood_slate`, `brutalist_ash`, `pebble_greige`, `chalk_limestone` |
+| **Upsetti Hearth** (`hearth`) | `stucco` | `tiles` | `oxblood_maroon`, `crimson_ember`, `cinnabar_rust`, `burnt_persimmon`, `marigold_amber`, `saffron_ochre` |
+| **Verdant Sage** (`verdant`) | `cobble` | `bricks` | `shadow_pine`, `deep_lichen`, `olive_cypress`, `eucalyptus_fern`, `misty_sage`, `celadon_mint` |
+| **Maritime Verdigris** (`maritime`) | `plate` | `shingles` | `trench_navy`, `storm_indigo`, `aegean_teal`, `patina_verdigris`, `seafoam_aqua`, `glacial_mist` |
+| **Twilight Velvet** (`twilight`) | `marble` | `fluted` | `eldritch_aubergine`, `imperial_plum`, `mulberry_wine`, `dusty_mauve`, `heather_blush`, `wisteria_lilac` |
+| **Rustic Timber** (`timber`) | `planks` | `framed` | `umbral_espresso`, `roasted_walnut`, `cinnamon_cedar`, `honey_ochrewood`, `driftwood_taupe`, `bleached_linen` |
+
+Cada um dos **72 conjuntos texturizados** (`36 cores × 2 variedades`) inclui **Bloco Inteiro**, **Laje (`_slab`)**, **Escada (`_stairs`)** e **Poste direcional (`_pole`, 6×16×6 com suporte a *waterlogging* e eixos X/Y/Z)** — totalizando **288 blocos** com receitas de bancada e cortador de pedra.
 
 ### Sua Primeira Construção Procedural (Passo a Passo)
 Vamos gerar uma mansão medieval mobiliada de 3 andares em menos de um minuto:

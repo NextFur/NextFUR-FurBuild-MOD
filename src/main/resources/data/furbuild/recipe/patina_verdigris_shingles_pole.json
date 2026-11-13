@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:patina_verdigris_shingles" } },
+  "pattern": ["#", "#"],
+  "result": { "id": "furbuild:patina_verdigris_shingles_pole", "count": 6 }
+}

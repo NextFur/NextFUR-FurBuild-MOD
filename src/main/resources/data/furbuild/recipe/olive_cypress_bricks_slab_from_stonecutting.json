@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:olive_cypress_bricks" },
+  "result": { "id": "furbuild:olive_cypress_bricks_slab", "count": 2 }
+}

@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.nextfur.fwb.FwMain;
+import net.nextfur.fwb.init.FwModBlocks;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,8 +33,8 @@ import java.util.Map;
 
 public class DefaultStylePresets {
 
-    public static final List<String> PRESET_NAMES = List.of("medieval", "cyberpunk", "nordic", "desert");
-    private static final String PRESET_VERSION = "v2_architectural";
+    public static final List<String> PRESET_NAMES = List.of("medieval", "cyberpunk", "nordic", "desert", "brutalist", "upsetti");
+    private static final String PRESET_VERSION = "v3_palettes";
 
     /**
      * Generates all built-in preset styles if they do not exist yet or are outdated, or overwrites them when force=true.
@@ -61,6 +62,8 @@ public class DefaultStylePresets {
                     case "cyberpunk" -> createCyberpunkPreset(server);
                     case "nordic" -> createNordicPreset(server);
                     case "desert" -> createDesertPreset(server);
+                    case "brutalist" -> createBrutalistPreset(server);
+                    case "upsetti" -> createUpsettiPreset(server);
                 }
                 Files.createDirectories(styleDir);
                 Files.writeString(versionFile, PRESET_VERSION);
@@ -223,6 +226,86 @@ public class DefaultStylePresets {
                 Blocks.CHISELED_RED_SANDSTONE.defaultBlockState(),
                 Blocks.SMOOTH_SANDSTONE.defaultBlockState(),
                 Blocks.ORANGE_TERRACOTTA.defaultBlockState()
+        );
+    }
+
+    private static void createBrutalistPreset(MinecraftServer server) throws IOException {
+        Map<ResourceLocation, Double> paintingWeights = new LinkedHashMap<>();
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "abyssal_slate_stone"), 0.15);
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "charcoal_basalt_stone"), 0.20);
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "ironwood_slate_stone"), 0.25);
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "brutalist_ash_stone"), 0.20);
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "pebble_greige_bricks"), 0.12);
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "chalk_limestone_stone"), 0.08);
+
+        Map<ResourceLocation, Double> pathWeights = new LinkedHashMap<>();
+        pathWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "charcoal_basalt_bricks"), 0.45);
+        pathWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "ironwood_slate_bricks"), 0.35);
+        pathWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "pebble_greige_stone"), 0.20);
+
+        Map<ResourceLocation, Double> floorWeights = new LinkedHashMap<>();
+        floorWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "brutalist_ash_bricks"), 0.60);
+        floorWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "chalk_limestone_bricks"), 0.40);
+
+        buildCompletePreset(
+                server,
+                "brutalist",
+                paintingWeights,
+                pathWeights,
+                floorWeights,
+                FwModBlocks.BY_ID.get("charcoal_basalt_bricks").block().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("abyssal_slate_bricks").block().get().defaultBlockState(),
+                Blocks.STONE_BRICKS.defaultBlockState(), // Replaced during Painting Pass
+                Blocks.GRAY_STAINED_GLASS_PANE.defaultBlockState(),
+                Blocks.IRON_DOOR.defaultBlockState(),
+                FwModBlocks.BY_ID.get("ironwood_slate_stone").stairs().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("pebble_greige_stone").block().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("abyssal_slate_stone").pole().get().defaultBlockState(),
+                Blocks.LANTERN.defaultBlockState(),
+                FwModBlocks.BY_ID.get("chalk_limestone_bricks").block().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("abyssal_slate_stone").block().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("charcoal_basalt_bricks").block().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("chalk_limestone_stone").block().get().defaultBlockState()
+        );
+    }
+
+    private static void createUpsettiPreset(MinecraftServer server) throws IOException {
+        Map<ResourceLocation, Double> paintingWeights = new LinkedHashMap<>();
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "oxblood_maroon_stucco"), 0.15);
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "crimson_ember_stucco"), 0.20);
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "cinnabar_rust_tiles"), 0.25);
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "burnt_persimmon_tiles"), 0.20);
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "marigold_amber_stucco"), 0.12);
+        paintingWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "saffron_ochre_stucco"), 0.08);
+
+        Map<ResourceLocation, Double> pathWeights = new LinkedHashMap<>();
+        pathWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "oxblood_maroon_tiles"), 0.45);
+        pathWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "crimson_ember_tiles"), 0.35);
+        pathWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "cinnabar_rust_stucco"), 0.20);
+
+        Map<ResourceLocation, Double> floorWeights = new LinkedHashMap<>();
+        floorWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "burnt_persimmon_stucco"), 0.60);
+        floorWeights.put(ResourceLocation.fromNamespaceAndPath(FwMain.MODID, "saffron_ochre_tiles"), 0.40);
+
+        buildCompletePreset(
+                server,
+                "upsetti",
+                paintingWeights,
+                pathWeights,
+                floorWeights,
+                FwModBlocks.BY_ID.get("oxblood_maroon_tiles").block().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("crimson_ember_tiles").block().get().defaultBlockState(),
+                Blocks.WHITE_WOOL.defaultBlockState(), // Replaced during Painting Pass
+                Blocks.ORANGE_STAINED_GLASS_PANE.defaultBlockState(),
+                Blocks.ACACIA_DOOR.defaultBlockState(),
+                FwModBlocks.BY_ID.get("cinnabar_rust_tiles").stairs().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("burnt_persimmon_stucco").block().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("oxblood_maroon_tiles").pole().get().defaultBlockState(),
+                Blocks.LANTERN.defaultBlockState(),
+                FwModBlocks.BY_ID.get("saffron_ochre_tiles").block().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("oxblood_maroon_stucco").block().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("crimson_ember_tiles").block().get().defaultBlockState(),
+                FwModBlocks.BY_ID.get("marigold_amber_tiles").block().get().defaultBlockState()
         );
     }
 

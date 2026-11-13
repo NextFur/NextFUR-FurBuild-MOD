@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "furbuild:block/roasted_walnut_planks",
+    "side": "furbuild:block/roasted_walnut_planks",
+    "top": "furbuild:block/roasted_walnut_planks"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:celadon_mint_cobble" } },
+  "pattern": ["#", "#"],
+  "result": { "id": "furbuild:celadon_mint_cobble_pole", "count": 6 }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "furbuild:block/deep_lichen_bricks",
+    "side": "furbuild:block/deep_lichen_bricks",
+    "top": "furbuild:block/deep_lichen_bricks"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "furbuild:block/oxblood_maroon_tiles",
+    "side": "furbuild:block/oxblood_maroon_tiles",
+    "top": "furbuild:block/oxblood_maroon_tiles"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "furbuild:block/heather_blush_fluted",
+    "side": "furbuild:block/heather_blush_fluted",
+    "top": "furbuild:block/heather_blush_fluted"
+  }
+}

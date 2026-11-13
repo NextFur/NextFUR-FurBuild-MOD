@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/roasted_walnut_framed_slab" },
+    "type=double": { "model": "furbuild:block/roasted_walnut_framed" },
+    "type=top": { "model": "furbuild:block/roasted_walnut_framed_slab_top" }
+  }
+}

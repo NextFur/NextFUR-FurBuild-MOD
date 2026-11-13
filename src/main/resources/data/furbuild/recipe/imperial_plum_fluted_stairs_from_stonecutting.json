@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "furbuild:imperial_plum_fluted" },
+  "result": { "id": "furbuild:imperial_plum_fluted_stairs", "count": 1 }
+}

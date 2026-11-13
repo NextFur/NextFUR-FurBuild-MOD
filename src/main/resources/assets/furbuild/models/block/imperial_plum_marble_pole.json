@@ -1,0 +1,6 @@
+{
+  "parent": "furbuild:block/pole_base",
+  "textures": {
+    "texture": "furbuild:block/imperial_plum_marble"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "furbuild:block/olive_cypress_bricks_slab" },
+    "type=double": { "model": "furbuild:block/olive_cypress_bricks" },
+    "type=top": { "model": "furbuild:block/olive_cypress_bricks_slab_top" }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "furbuild:block/trench_navy_plate",
+    "side": "furbuild:block/trench_navy_plate",
+    "top": "furbuild:block/trench_navy_plate"
+  }
+}

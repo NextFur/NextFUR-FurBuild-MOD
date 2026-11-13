@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "furbuild:block/roasted_walnut_framed",
+    "side": "furbuild:block/roasted_walnut_framed",
+    "top": "furbuild:block/roasted_walnut_framed"
+  }
+}

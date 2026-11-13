@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:oxblood_maroon_stucco" } },
+  "pattern": ["###"],
+  "result": { "id": "furbuild:oxblood_maroon_stucco_slab", "count": 6 }
+}

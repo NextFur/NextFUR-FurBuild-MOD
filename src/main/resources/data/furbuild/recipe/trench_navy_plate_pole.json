@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": { "#": { "item": "furbuild:trench_navy_plate" } },
+  "pattern": ["#", "#"],
+  "result": { "id": "furbuild:trench_navy_plate_pole", "count": 6 }
+}
